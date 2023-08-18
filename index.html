@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>郵便料金シミュレーション ver0.9</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="header">
+            <h3>郵便料金シミュレーション　β版</h3>
+        </div>
+        <div class="container">
+            <div class="menu-box">
+                <button class="accordion-btn">封筒サイズ</button>
+                <div class="accordion-panel">
+                  <p>アコーディオンメニューのパネル内部１</p>
+                  <div class="button-area">
+                  <button class="envelop-btn" >角型１号</button>
+                  <button class="envelop-btn" >角型５号</button>
+                  </div>
+                </div>
+                <button class="accordion-btn">サイズ直接入力</button>
+                <div class="accordion-panel">
+                  <p>アコーディオンメニューのパネル内部２</p>
+                </div>
+                <button class="accordion-btn">内容物</button>
+                <div class="accordion-panel">
+                  <p>アコーディオンメニューのパネル内部３</p>
+                </div>
+                
+            </div>
+            <div class="footer">
+                <p>フッター</p>
+            </div>
+        </div>
+        <div class="simulation-area">
+            <div class="simu-left">
+                <div class="simu-size">
+                    <p>サイズをここに表示</p>
+                </div>
+                <div class="simu-weight">
+                    <p>重さをここに表示</p>
+                </div>
+            </div>
+            <div class="arrow"><p>→</p></div>
+            <div class="simu-right">
+                <div class="result">
+                    <p>結果をここに表示</p>
+                </div>
+            </div>
+        </div>
+        <script src="javascript.js"></script>
+    </body>
+</html>
