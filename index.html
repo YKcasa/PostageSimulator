@@ -11,24 +11,39 @@
             <h3>郵便料金シミュレーション　β版</h3>
         </div>
         <div class="container">
-            <div class="menu-box">
-                <button class="accordion-btn">封筒サイズ</button>
-                <div class="accordion-panel">
-                  <p>アコーディオンメニューのパネル内部１</p>
-                  <div class="button-area">
-                  <button class="envelop-btn" >角型１号</button>
-                  <button class="envelop-btn" >角型５号</button>
-                  </div>
+            <div class="menu-box" id="menu">
+                <div class="inclusion" id="inclusion">
+                    <h2>何を送りますか？</h2>
+                    <div class="inclusion-1">
+                        <h4>普通紙</h4>
+                        <select id="normalSize">
+                            <option value="A4">A4</option>
+                            <option value="B4">B4</option>
+                        </select>
+                        <select id="normalPages">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                        <p>枚</p>
+                    </div>
+                    <!-- <div class="inclusion-2">
+                        <p>厚紙</p>
+                        <select id="heavy-size">
+                            <option value="A4">A4 | 210mm x 297mm</option>
+                            <option value="B4">B4 | 257mm x 364mm</option>
+                        </select>
+                        <select id="heavy-pages">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div> -->
                 </div>
                 <button class="accordion-btn">サイズ直接入力</button>
                 <div class="accordion-panel">
-                  <p>アコーディオンメニューのパネル内部２</p>
+                    <p>当機能は作成中です・・・</p>
                 </div>
-                <button class="accordion-btn">内容物</button>
-                <div class="accordion-panel">
-                  <p>アコーディオンメニューのパネル内部３</p>
-                </div>
-                
             </div>
             <div class="footer">
                 <p>フッター</p>
@@ -38,9 +53,15 @@
             <div class="simu-left">
                 <div class="simu-size">
                     <p>サイズをここに表示</p>
+                    <div id="display-size-area"></div>
                 </div>
                 <div class="simu-weight">
                     <p>重さをここに表示</p>
+                    <div id="display-weight-area"></div>
+                </div>
+                <div class="simu-thickness">
+                    <p>厚みをここに表示</p>
+                    <div id="display-thickness-area"></div>
                 </div>
             </div>
             <div class="arrow"><p>→</p></div>
@@ -51,5 +72,46 @@
             </div>
         </div>
         <script src="javascript.js"></script>
+        <script>
+            const paperData = {
+                 'normal': { label: "普通紙", weight: 90, thickness: 0.12},
+                 'heavy': { label: "厚紙", weight: 120, thickness: 0.15}
+                 // ... 他のペーパーデータ
+            };
+                 
+                 const sizeMap = {
+                'A4': ['210', '297'],
+                'B4': ['257', '364']
+            };
+            
+            const inclusionContainer = document.getElementById('inclusion'); // inclusionを取得
+
+            inclusionContainer.addEventListener('change', function(event) {
+                calculate();
+            });
+
+            const displaySize = document.getElementById("display-size-area");
+            const displayWeight = document.getElementById("display-weight-area");
+            const displayThickness = document.getElementById("display-thickness-area");
+
+            function calculate() {
+                const selectedSize = sizeMap[normalSize.value]; // 選択されたサイズを取得
+                displaySize.textContent = selectedSize.join(' x ');
+
+                const selectedPaperData = paperData.normal; // 選択された紙のデータを取得
+                const calculatedWeight = selectedPaperData.weight * normalPages.value;
+                displayWeight.textContent = `${calculatedWeight} g`;
+
+                const calculatedThickness = selectedPaperData.thickness * normalPages.value;
+                displayThickness.textContent = `${calculatedThickness} mm`;
+            }
+
+            // function initialize() {
+            // }
+            
+            // document.addEventListener('DOMContentLoaded', initialize);
+                
+
+        </script>
     </body>
 </html>
