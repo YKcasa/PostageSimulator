@@ -73,43 +73,83 @@
         </div>
         <script src="javascript.js"></script>
         <script>
-            const paperData = {
-                 'normal': { label: "普通紙", weight: 90, thickness: 0.12},
-                 'heavy': { label: "厚紙", weight: 120, thickness: 0.15}
-                 // ... 他のペーパーデータ
-            };
+            // 内容物のデータ
+            // const dataSet = {
+            //      'normal': { label: "普通紙", weight: 90, thickness: 0.12},
+            //      'heavy': { label: "厚紙", weight: 120, thickness: 0.15}
+            //      // ... 他のペーパーデータ
+            // };
                  
-                 const sizeMap = {
+            const sizeMap = {
                 'A4': ['210', '297'],
                 'B4': ['257', '364']
-            };
+            };    
+
+            // 内容物のデータセット
+            class Inclusion {
+                constructor(long,short,number,isVariable,weight,thickness){
+                    this.long = long;
+                    this.short = short;
+                    this.number = number;
+                    this.isVariable = isVariable;
+                    this.weight = weight;
+                    this.thickness = thickness;
+                }
+            }
+
+            const Normal = new Inclusion(0,0,0,true,90,0.12);
+            const Heavy = new Inclusion(0,0,0,true,120,0.15);
+            const ClearFiles = new Inclusion('test'); 
+            const Clips = new Inclusion('test');
+
             
+            // 変更時の処理
             const inclusionContainer = document.getElementById('inclusion'); // inclusionを取得
 
             inclusionContainer.addEventListener('change', function(event) {
+                getInclusion();
+                updateInclusion();
                 calculate();
-            });
+            });    
+            
+            function getInclusion(){
+                const normalPaperSize = sizeMap[normalSize.value];
+                Normal.long = normalPaperSize[0];
+                Normal.short = normalPaperSize[1];
 
-            const displaySize = document.getElementById("display-size-area");
-            const displayWeight = document.getElementById("display-weight-area");
-            const displayThickness = document.getElementById("display-thickness-area");
+            }    
 
+            function updateInclusion(){
+                const thickness_1 = Normal.thickness * normalPages.value;
+                const weight_1 = Normal.weight * 1000 / 1000 * normalPages.value;
+            }    
+            
             function calculate() {
-                const selectedSize = sizeMap[normalSize.value]; // 選択されたサイズを取得
-                displaySize.textContent = selectedSize.join(' x ');
+                // const selectedSize = sizeMap[normalSize.value]; // 選択されたサイズを取得
+                displaySize.textContent = `${Normal.long}mm × ${Normal.short}mm`;
 
-                const selectedPaperData = paperData.normal; // 選択された紙のデータを取得
+                // const selectedPaperData = dataSet.normal; // 選択された紙のデータを取得
                 const calculatedWeight = selectedPaperData.weight * normalPages.value;
                 displayWeight.textContent = `${calculatedWeight} g`;
 
                 const calculatedThickness = selectedPaperData.thickness * normalPages.value;
                 displayThickness.textContent = `${calculatedThickness} mm`;
-            }
+            }    
 
-            // function initialize() {
-            // }
+
+            // 出力エリア
+            const displaySize = document.getElementById("display-size-area");
+            const displayWeight = document.getElementById("display-weight-area");
+            const displayThickness = document.getElementById("display-thickness-area");
             
-            // document.addEventListener('DOMContentLoaded', initialize);
+
+
+            // 初期化処理
+            function initialize() { 
+            }
+            
+            // 画面読み込み時に初期化処理を行う
+            document.addEventListener('DOMContentLoaded', initialize);
                 
 
         </script>
