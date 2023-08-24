@@ -82,6 +82,8 @@
             <div class="simu-right">
                 <div class="result">
                     <p>結果をここに表示</p>
+                    <div id="display-mailtype"></div>
+                    <div id="display-postage"></div>
                 </div>
             </div>
         </div>
@@ -201,7 +203,7 @@
                 const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
                 console.log(envelopeButtons);
 
-                envelopeButtons.forEach(btns => btns.addEventListener('click', calculate));
+                envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
                 
                 // function envelopeCalculate(){
                 //     const selectedEnvelopeSize = envelopeData[event.target.id];
@@ -251,7 +253,7 @@
 
             // envelopeButtons.forEach(btns => btns.addEventListener('click', envelopeCalculate));
 
-            function calculate(){
+            function forResult(){
                 envelopeCalculate();
                 postageCalculate();
             }
@@ -269,13 +271,21 @@
             const displaySize = document.getElementById("display-size-area");
             const displayWeight = document.getElementById("display-weight-area");
             const displayThickness = document.getElementById("display-thickness-area");
-            
+            const displayMailType = document.getElementById("display-mailtype");
+            const displayPostage = document.getElementById("display-postage");
 
             // 郵便種別判定処理
             function postageCalculate() {
-            
+                if (evlpLongSide <= 340 && evlpShortSide <= 250){
+                    if (evlpLongSide <= 235 && evlpShortSide <= 12){
+                        displayMailType.textContent = `定形郵便物です`;
+                    }else{
+                        displayMailType.textContent = `定形外・規格内郵便物です`;
+                    }
+                }else{
+                    displayMailType.textContent = `定形外・規格外郵便物です`;
+                }
             }
-
 
             // 初期化処理
             function initialize() { 
