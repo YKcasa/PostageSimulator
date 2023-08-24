@@ -33,6 +33,15 @@
     margin: 100px auto;
 }
 
+.input-area {
+    margin: 20px 0px;
+}
+
+.input-area h2 {
+    margin-bottom: 5px;
+    border-bottom: 1px solid var(--main-color);
+}
+
 .inclusion-1 {
     display: flex;
 }
@@ -61,7 +70,10 @@
     margin: 5px;
 }
 
-.simu-size {
+.simu-size, .simu-weight, .simu-thickness {
+    width: 100px;
+    margin: 5px;
+    padding: 5px;
     background-color: var(--main-font-light);
 }
 

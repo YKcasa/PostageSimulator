@@ -12,37 +12,51 @@
         </div>
         <div class="container">
             <div class="menu-box" id="menu">
-                <div class="inclusion" id="inclusion">
+                <div class="input-area" id="inclusion">
                     <h2>何を送りますか？</h2>
                     <div class="inclusion-1">
-                        <h4>普通紙</h4>
+                        <h4>普通紙：　</h4>
                         <select id="normalSize">
-                            <option value="A4">A4</option>
-                            <option value="B4">B4</option>
+                            <option value="none">サイズを選択</option>
+                            <option value="A4">A4 | 210mm x 297mm</option>
+                            <option value="B4">B4 | 257mm x 364mm</option>
                         </select>
                         <select id="normalPages">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
+                            <option value="3">3</option>
                         </select>
                         <p>枚</p>
                     </div>
-                    <!-- <div class="inclusion-2">
-                        <p>厚紙</p>
-                        <select id="heavy-size">
+                    <div class="inclusion-2">
+                        <h4>厚紙：　</h4>
+                        <select id="heavySize">
+                            <option value="none">サイズを選択</option>
                             <option value="A4">A4 | 210mm x 297mm</option>
                             <option value="B4">B4 | 257mm x 364mm</option>
                         </select>
-                        <select id="heavy-pages">
+                        <select id="heavyPages">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
+                            <option value="3">3</option>
                         </select>
-                    </div> -->
+                        <p>枚</p>
+                    </div>
                 </div>
-                <button class="accordion-btn">サイズ直接入力</button>
+                <button class="accordion-btn">ダミー：アコーディオンメニューの練習</button>
                 <div class="accordion-panel">
-                    <p>当機能は作成中です・・・</p>
+                    <p>サイズ直接入力機能は作成中です・・・</p>
+                    <input type="text" value="エラー処理めんどうだなあ"/>
+                </div>
+                <div class="input-area" id="envelope">
+                    <h2>封筒のサイズは？</h2>
+                    <div class="envelope-select">
+                        <button class="envelope-btn" id="K1">角形１号</button>
+                        <button class="envelope-btn" id="T2">長形２号</button>
+                        <button class="envelope-btn" id="T4">長形４号</button>
+                    </div>
                 </div>
             </div>
             <div class="footer">
@@ -52,15 +66,15 @@
         <div class="simulation-area">
             <div class="simu-left">
                 <div class="simu-size">
-                    <p>サイズをここに表示</p>
+                    <p>サイズ</p>
                     <div id="display-size-area"></div>
                 </div>
                 <div class="simu-weight">
-                    <p>重さをここに表示</p>
+                    <p>重さ</p>
                     <div id="display-weight-area"></div>
                 </div>
                 <div class="simu-thickness">
-                    <p>厚みをここに表示</p>
+                    <p>厚み</p>
                     <div id="display-thickness-area"></div>
                 </div>
             </div>
@@ -73,14 +87,9 @@
         </div>
         <script src="javascript.js"></script>
         <script>
-            // 内容物のデータ
-            // const dataSet = {
-            //      'normal': { label: "普通紙", weight: 90, thickness: 0.12},
-            //      'heavy': { label: "厚紙", weight: 120, thickness: 0.15}
-            //      // ... 他のペーパーデータ
-            // };
-                 
+            // サイズの一覧
             const sizeMap = {
+                'none': [' -- ', ' -- '],
                 'A4': ['210', '297'],
                 'B4': ['257', '364']
             };    
@@ -97,45 +106,99 @@
                 }
             }
 
-            const Normal = new Inclusion(0,0,0,true,90,0.12);
-            const Heavy = new Inclusion(0,0,0,true,120,0.15);
+            const Normal = new Inclusion(0,0,0,true,55,0.12); // コピー用紙 55kg
+            const Heavy = new Inclusion(0,0,0,true,120,0.15); // 厚紙 120kg
             const ClearFiles = new Inclusion('test'); 
             const Clips = new Inclusion('test');
 
+            // 封筒ボタンのデータセット
+            const envelopeData = {
+                'K1': ['270', '382'],
+                'T2': ['119', '277'],
+                'T4': ['90', '205']
+            }
+
             
-            // 変更時の処理
+            // 内容物変更時の処理
+            let thicknes_1, weight_1, thickness_2, weight_2;
+
             const inclusionContainer = document.getElementById('inclusion'); // inclusionを取得
 
             inclusionContainer.addEventListener('change', function(event) {
                 getInclusion();
                 updateInclusion();
                 calculate();
+                buttonSelect();
             });    
             
             function getInclusion(){
-                const normalPaperSize = sizeMap[normalSize.value];
-                Normal.long = normalPaperSize[0];
-                Normal.short = normalPaperSize[1];
-
+                if (normalPages.value != 0){
+                    const normalPaperSize = sizeMap[normalSize.value];
+                    Normal.long = normalPaperSize[0];
+                    Normal.short = normalPaperSize[1];
+                }else{
+                    Normal.long = 0;
+                    Normal.short = 0;
+                }
+                
+                if (heavyPages.value != 0){
+                    const heavyPaperSize = sizeMap[heavySize.value];
+                    Heavy.long = heavyPaperSize[0];
+                    Heavy.short = heavyPaperSize[1];
+                }else{
+                    Heavy.long = 0;
+                    Heavy.short = 0;
+                }
             }    
 
             function updateInclusion(){
-                const thickness_1 = Normal.thickness * normalPages.value;
-                const weight_1 = Normal.weight * 1000 / 1000 * normalPages.value;
+                thickness_1 = Normal.thickness * normalPages.value;
+                weight_1 = (Normal.weight * normalPages.value / (788 * 1091) * Normal.long * Normal.short).toFixed(2); //四六判から選択サイズに変換する（未完
+
+                thickness_2 = Heavy.thickness * heavyPages.value;
+                weight_2 = (Heavy.weight * heavyPages.value / (788 * 1091) * Heavy.long * Heavy.short).toFixed(2); //四六判から選択サイズに変換する（未完
             }    
             
+            let inclLongSide, inclShortSide, inclTotalWeight, inclTotalThicknes;
+
             function calculate() {
-                // const selectedSize = sizeMap[normalSize.value]; // 選択されたサイズを取得
-                displaySize.textContent = `${Normal.long}mm × ${Normal.short}mm`;
+                if (Normal.long > Heavy.long){
+                    inclLongSide = Normal.long;
+                }else{
+                    inclLongSide = Heavy.long;
+                }
 
-                // const selectedPaperData = dataSet.normal; // 選択された紙のデータを取得
-                const calculatedWeight = selectedPaperData.weight * normalPages.value;
-                displayWeight.textContent = `${calculatedWeight} g`;
+                if (Normal.short > Heavy.short){
+                    inclShortSide = Normal.short;
+                }else{
+                    inclShortSide = Heavy.short;
+                }
 
-                const calculatedThickness = selectedPaperData.thickness * normalPages.value;
-                displayThickness.textContent = `${calculatedThickness} mm`;
+                inclTotalWeight = Number(weight_1) + Number(weight_2);
+                displayWeight.textContent = `${inclTotalWeight} g`;
+                
+                inclTotalThicknes = Number(thickness_1) + Number(thickness_2);
+                displayThickness.textContent = `${inclTotalThicknes} mm`;
             }    
 
+            function buttonSelect() {
+
+            }
+
+
+            // 封筒ボタン選択時の処理
+
+            let evlpLongSide, evlpShortSide, totalWeight, totalThickness;
+            const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
+
+            envelopeButtons.forEach(btns => btns.addEventListener('click', envelopeCalculate));
+
+            function envelopeCalculate(){
+                const selectedEnvelopeSize = envelopeData[event.target.id];
+                evlpLongSide = selectedEnvelopeSize[0];
+                evlpShortSide = selectedEnvelopeSize[1];
+                displaySize.textContent = `${evlpLongSide}mm × ${evlpShortSide}mm`;
+            }
 
             // 出力エリア
             const displaySize = document.getElementById("display-size-area");
