@@ -61,6 +61,14 @@
     color: var(--main-font-dark);
   }
 
+.envelope-btn {
+    height: 36px;
+    width: 70px;
+    margin: 5px;
+    background-color: var(--main-font-light);
+    color: var(--main-font-dark);
+}
+
 .button-area {
     display: flex;
 }
@@ -80,7 +88,7 @@
 .simulation-area {
     display: flex;
     width: 100%;
-    height: 80px;
+    height: 100px;
     margin: 5px;
     background-color: rgba(var(--main-color-rgb),0.2);
     /* opacity: 0.2; */
