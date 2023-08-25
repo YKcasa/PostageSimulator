@@ -52,11 +52,7 @@
                 </div>
                 <div class="input-area" id="envelope">
                     <h2>封筒のサイズは？</h2>
-                    <div id="envelope-select">
-                        <!-- <button class="envelope-btn" id="K1">角形１号</button>
-                        <button class="envelope-btn" id="T2">長形２号</button>
-                        <button class="envelope-btn" id="T4">長形４号</button> -->
-                    </div>
+                    <div id="envelope-select"></div>
                 </div>
             </div>
             <div class="footer">
@@ -89,29 +85,54 @@
         </div>
         <script src="javascript.js"></script>
         <script>
-            // サイズの一覧
+
+            // 内容物のデータセット
+            class Inclusion {
+                constructor(id, label, weight, thickness, havingSize, max){
+                    this.id = id;
+                    this.label = label;
+                    this.longSide = 0;
+                    this.shortSide = 0;
+                    this.quantity = 0;
+                    this.quantityMax = max;
+                    this.havingSize = havingSize;
+                    this.weight = weight;
+                    this.thickness = thickness;
+                    this.createElements();
+                    this.attachListeners();
+                }
+
+                createElements() {
+                    // コンポーネントの要素を作成し、画面に追加する処理
+                    const componentDiv = document.createElement('div');
+                    // ...要素の設定
+                    document.getElementById('inclusion-contents');
+                }
+
+                attachListeners() {
+                    // ユーザー操作のリスナーを追加する処理
+                    // サイズのドロップダウンが変更されたら this.size を更新
+                    // 数量のドロップダウンが変更されたら this.quantity を更新
+                }
+
+                updateUI() {
+                    // 画面要素の内容を this.size と this.quantity に基づいて更新
+                }
+            }
+            
+            // 画面表示コンポーネント用の配列
+            const componentsData = {
+                'NormalPaper': {id:'normal', label:'普通紙', weight:55, thickness:0.12, havingSize: true, max: 20},
+                'Clips': {id:'clips', label:'クリップ', weight:0.42, thickness:1.0, havingSize: false, max: 5}
+                // コンポーネントを適宜追加
+            }
+
+            // サイズ一覧
             const sizeMap = {
                 'none': [' -- ', ' -- '],
                 'A4': ['297', '210'],
                 'B4': ['364', '257']
-            };    
-
-            // 内容物のデータセット
-            class Inclusion {
-                constructor(long,short,number,isVariable,weight,thickness){
-                    this.long = long;
-                    this.short = short;
-                    this.number = number;
-                    this.isVariable = isVariable;
-                    this.weight = weight;
-                    this.thickness = thickness;
-                }
-            }
-
-            const Normal = new Inclusion(0,0,0,true,55,0.12); // コピー用紙 55kg
-            const Heavy = new Inclusion(0,0,0,true,120,0.15); // 厚紙 120kg
-            const ClearFiles = new Inclusion('test'); 
-            const Clips = new Inclusion('test');
+            }    
 
             // 封筒ボタンのデータセット
             const envelopeData = {
@@ -131,8 +152,16 @@
             const displayMailType = document.getElementById("display-mailtype");
             const displayPostage = document.getElementById("display-postage");
 
+            const componentInstances = componentsData.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
+
+            // 画面上の要素が変更された場合、対応するインスタンスのデータを更新
+            componentsInstances.forEach(instance => {
+                instance.updateUI();
+            });
+            
 
 
+            
             // 内容物変更時の処理
             let thicknes_1, weight_1, thickness_2, weight_2;
             let inclLongSide, inclShortSide, inclTotalWeight, inclTotalThicknes;
@@ -141,8 +170,9 @@
             inclusionContainer.addEventListener('change', function(event) {
                 getInclusion(); // 内容物の情報を取得
                 updateInclusion(); // 変数に格納
+                // generateInclusionArray();　// まだ作ってない
                 calculate(); // サイズなどの計算
-                buttonSelect(); // 封筒ボタンの生成
+                generateEnvelopeButtons();
             });    
             
             function getInclusion(){
@@ -194,15 +224,15 @@
                 displayThickness.textContent = `${inclTotalThicknes} mm`;
             }    
 
-            function buttonSelect() { 
+            function generateEnvelopeButtons() { 
                 envelopeArea.innerHTML = ''; // 既存のボタンを削除
 
-                Object.keys(envelopeData).forEach(buttonId => {
-                    const data = envelopeData[buttonId];
+                Object.keys(envelopeData).forEach(envelopeId => {
+                    const data = envelopeData[envelopeId];
                     if(data.long > inclLongSide && data.short > inclShortSide){
                         const button = document.createElement("button");
-                        button.id = buttonId;
-                        button.textContent = `${envelopeData[buttonId].value}`;
+                        button.id = envelopeId;
+                        button.textContent = `${envelopeData[envelopeId].value}`;
                         button.classList.add('envelope-btn');
                         envelopeArea.appendChild(button);
                     }
