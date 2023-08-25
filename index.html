@@ -121,16 +121,28 @@
                 'T4': {value:"長型４号", long:205, short:90}
             }   
             
+            // データ取得
+            const inclusionContainer = document.getElementById('inclusion'); // 内容物
+            const envelopeArea = document.getElementById('envelope-select'); // 封筒
+            // 出力エリア
+            const displaySize = document.getElementById("display-size-area");
+            const displayWeight = document.getElementById("display-weight-area");
+            const displayThickness = document.getElementById("display-thickness-area");
+            const displayMailType = document.getElementById("display-mailtype");
+            const displayPostage = document.getElementById("display-postage");
+
+
+
             // 内容物変更時の処理
             let thicknes_1, weight_1, thickness_2, weight_2;
+            let inclLongSide, inclShortSide, inclTotalWeight, inclTotalThicknes;
 
-            const inclusionContainer = document.getElementById('inclusion'); // inclusionを取得
 
             inclusionContainer.addEventListener('change', function(event) {
-                getInclusion();
-                updateInclusion();
-                calculate();
-                buttonSelect();
+                getInclusion(); // 内容物の情報を取得
+                updateInclusion(); // 変数に格納
+                calculate(); // サイズなどの計算
+                buttonSelect(); // 封筒ボタンの生成
             });    
             
             function getInclusion(){
@@ -161,7 +173,6 @@
                 weight_2 = (Heavy.weight * heavyPages.value / (788 * 1091) * Heavy.long * Heavy.short).toFixed(2); //四六判から選択サイズに変換する（未完
             }    
             
-            let inclLongSide, inclShortSide, inclTotalWeight, inclTotalThicknes;
 
             function calculate() {
                 if (Normal.long > Heavy.long){
@@ -183,9 +194,6 @@
                 displayThickness.textContent = `${inclTotalThicknes} mm`;
             }    
 
-            // ボタン作成
-            const envelopeArea = document.getElementById('envelope-select');
-            
             function buttonSelect() { 
                 envelopeArea.innerHTML = ''; // 既存のボタンを削除
 
@@ -201,63 +209,19 @@
                 })
 
                 const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
-                console.log(envelopeButtons);
-
                 envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
                 
-                // function envelopeCalculate(){
-                //     const selectedEnvelopeSize = envelopeData[event.target.id];
-                //     console.log(selectedEnvelopeSize);
-                //     evlpLongSide = selectedEnvelopeSize[0];
-                //     evlpShortSide = selectedEnvelopeSize[1];
-                //     displaySize.textContent = `${evlpLongSide}mm × ${evlpShortSide}mm`;
-                // }
-
-                // evlpArray.forEach(button => {
-                    //     console.log(button);
-                //     const buttonData = evlpArray.find(data => data.id === button.id);
-                    
-                //     if (buttonData.long < inclLongSide) {
-                //     //   button.disabled = true; // ボタンを無効化
-                //     button.style.display = "none"; // ボタンを非表示
-                //     } else {
-                //     //   button.disabled = false;
-                //     button.style.display = "block";
-                //     }
-                // });
             }
-
-            // const evlpArray = envelopeData.map(button => document.getElementById(button.id));
-            
-            // function buttonSelect() { 
-            //     evlpArray.forEach(button => {
-            //         console.log(button);
-            //         const buttonData = evlpArray.find(data => data.id === button.id);
-                    
-            //         if (buttonData.long < inclLongSide) {
-            //         //   button.disabled = true; // ボタンを無効化
-            //         button.style.display = "none"; // ボタンを非表示
-            //         } else {
-            //         //   button.disabled = false;
-            //         button.style.display = "block";
-            //         }
-            //     });
-            // }
-
 
 
             // 封筒ボタン選択時の処理
 
             let evlpLongSide, evlpShortSide, totalWeight, totalThickness;
-            // const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
-
-            // envelopeButtons.forEach(btns => btns.addEventListener('click', envelopeCalculate));
 
             function forResult(){
                 envelopeCalculate();
                 postageCalculate();
             }
-
 
             function envelopeCalculate(){
                 const selectedEnvelopeSize = envelopeData[event.target.id];
@@ -267,12 +231,6 @@
                 displaySize.textContent = `${evlpLongSide}mm × ${evlpShortSide}mm`;
             }
 
-            // 出力エリア
-            const displaySize = document.getElementById("display-size-area");
-            const displayWeight = document.getElementById("display-weight-area");
-            const displayThickness = document.getElementById("display-thickness-area");
-            const displayMailType = document.getElementById("display-mailtype");
-            const displayPostage = document.getElementById("display-postage");
 
             // 郵便種別判定処理
             function postageCalculate() {
@@ -287,6 +245,7 @@
                 }
             }
 
+            
             // 初期化処理
             function initialize() { 
             }
