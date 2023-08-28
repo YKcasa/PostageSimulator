@@ -3,58 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Elements</title>
+    <title>コンポーネント作成とデータ取得のテスト</title>
 </head>
 <body>
-    <div id="dynamic-elements"></div>
+    <div id="components-container"></div>
 
     <script>
-            const components = [
-                { label: '普通紙', paperSize: true, max: 5 },
-                { label: 'クリップ', paperSize: false, max: 3 }
-              ];
-              
-              const sizeStandard = {
-                'A4': { short: 100, long: 200 },
-                'B4': { short: 120, long: 240 }
-              };
-                
-              
-              function createComponentElements() {
-                  const container = document.getElementById('dynamic-elements');
-                  
-                  components.forEach(component => {
-                    const div = document.createElement('div');
-                    
-                    const label = document.createElement('label');
-                    label.textContent = component.label;
-                    div.appendChild(label);
-                    
-                    if (component.paperSize) {
-                      const paperSizeSelect = document.createElement('select');
-                      for (const size in sizeStandard) {
-                        const option = document.createElement('option');
-                        option.value = size;
-                        option.text = size;
-                        paperSizeSelect.appendChild(option);
-                      }
-                      div.appendChild(paperSizeSelect);
-                    }
-                    
-                    const maxSelect = document.createElement('select');
-                    for (let i = 0; i <= component.max; i++) {
-                      const option = document.createElement('option');
-                      option.value = i;
-                      option.text = i;
-                      maxSelect.appendChild(option);
-                    }
-                    div.appendChild(maxSelect);
-                    
-                    container.appendChild(div);
-                  });
-                } 
+      const components = {
+          'normal' : { label: '普通紙', paperSize: true, max: 5 },
+          'clip' : { label: 'クリップ', paperSize: false, max: 3 }
+      };
+        
+        const sizeStandard = {
+          'サイズを選択してください' : {short: 0, long: 0},
+          'A4': { short: 100, long: 200 },
+          'B4': { short: 120, long: 240 }
+        };
+          
+        class Component{
+          constructor(key, label, paperSize, max){
+            this.key = key;
+            this.label = label;
+            this.papersize = paperSize;
+            this.max = max;
+            this.quantity = 0;
+            this.creatElements();
+            this.attachListeners();
+          };
 
-        createComponentElements();
+          creatElements(){
+            const div = document.createElement('div');
+            document.getElementById('components-container').appendChild(div);
+  
+            const label = document.createElement('label');
+            label.textContent = this.label;
+            div.appendChild(label);
+  
+            const paperSizeSelect = document.createElement('select');
+            paperSizeSelect.id = this.key + '-size'; 
+            for (const size in sizeStandard) {
+              const option = document.createElement('option');
+              option.value = size;
+              option.text = size;
+              paperSizeSelect.appendChild(option);
+            }
+
+            if(this.papersize == false){
+              paperSizeSelect.disabled = true;
+            }
+
+            div.appendChild(paperSizeSelect);
+            
+            const maxSelect = document.createElement('select');
+            maxSelect.id = this.key + '-quantity';
+            for (let i = 0; i <= this.max; i++) {
+              const option = document.createElement('option');
+              option.value = i;
+              option.text = i;
+              maxSelect.appendChild(option);
+            }
+            div.appendChild(maxSelect);
+            
+          }
+
+          attachListeners(){
+            // ドロップダウンメニューに変更時のイベントリスナーを設置
+            const paperSizeSelect = document.getElementById(this.key + '-size');
+            const quantitySelect = document.getElementById(this.key + '-quantity');
+            
+            paperSizeSelect.addEventListener('change', this.updateInstance.bind(this));
+            quantitySelect.addEventListener('change', this.updateInstance.bind(this));
+          }
+          
+          updateInstance(){
+            const paperSizeSelect = document.getElementById(this.key + '-size');
+            const quantitySelect = document.getElementById(this.key + '-quantity');
+
+            const selectedPaperSize = paperSizeSelect.value;
+            const quantity = quantitySelect.value;
+
+            this.papersize = selectedPaperSize;
+            this.quantity = quantity;
+
+            console.log(this);
+
+          }
+        };
+        
+        // インスタンスから画面要素を作成
+        const componentsInstances = Object.keys(components).map(data => new Component(data, components[data].label,components[data].paperSize,components[data].max));
+
+        // componentsInstances.forEach(instance => {
+        //   console.log(instance);
+        //   instance.creatElements();
+        //   instance.attachListeners();
+        // })
+          
     </script>
 </body>
 </html>

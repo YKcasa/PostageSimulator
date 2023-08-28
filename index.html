@@ -12,44 +12,15 @@
         </div>
         <div class="container">
             <div class="menu-box" id="menu">
-                <div class="input-area" id="inclusion">
+                <div class="input-area">
                     <h2>何を送りますか？</h2>
-                    <div class="inclusion-1">
-                        <h4>普通紙：　</h4>
-                        <select id="normalSize">
-                            <option value="none">サイズを選択</option>
-                            <option value="A4">A4 | 297mm x 210mm</option>
-                            <option value="B4">B4 | 364mm x 257mm</option>
-                        </select>
-                        <select id="normalPages">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
-                        <p>枚</p>
-                    </div>
-                    <div class="inclusion-2">
-                        <h4>厚紙：　</h4>
-                        <select id="heavySize">
-                            <option value="none">サイズを選択</option>
-                            <option value="A4">A4 | 297mm x 210mm</option>
-                            <option value="B4">B4 | 364mm x 257mm</option>
-                        </select>
-                        <select id="heavyPages">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
-                        <p>枚</p>
-                    </div>
+                    <div id="inclusion"></div>
                 </div>
-                <button class="accordion-btn">ダミー：アコーディオンメニューの練習</button>
+                <!-- <button class="accordion-btn">ダミー：アコーディオンメニューの練習</button>
                 <div class="accordion-panel">
                     <p>サイズ直接入力機能は作成中です・・・</p>
                     <input type="text" value="エラー処理めんどうだなあ"/>
-                </div>
+                </div> -->
                 <div class="input-area" id="envelope">
                     <h2>封筒のサイズは？</h2>
                     <div id="envelope-select"></div>
@@ -86,52 +57,19 @@
         <script src="javascript.js"></script>
         <script>
 
-            // 内容物のデータセット
-            class Inclusion {
-                constructor(id, label, weight, thickness, havingSize, max){
-                    this.id = id;
-                    this.label = label;
-                    this.longSide = 0;
-                    this.shortSide = 0;
-                    this.quantity = 0;
-                    this.quantityMax = max;
-                    this.havingSize = havingSize;
-                    this.weight = weight;
-                    this.thickness = thickness;
-                    this.createElements();
-                    this.attachListeners();
-                }
-
-                createElements() {
-                    // コンポーネントの要素を作成し、画面に追加する処理
-                    const componentDiv = document.createElement('div');
-                    // ...要素の設定
-                    document.getElementById('inclusion-contents');
-                }
-
-                attachListeners() {
-                    // ユーザー操作のリスナーを追加する処理
-                    // サイズのドロップダウンが変更されたら this.size を更新
-                    // 数量のドロップダウンが変更されたら this.quantity を更新
-                }
-
-                updateUI() {
-                    // 画面要素の内容を this.size と this.quantity に基づいて更新
-                }
-            }
-            
-            // 画面表示コンポーネント用の配列
-            const componentsData = {
-                'NormalPaper': {id:'normal', label:'普通紙', weight:55, thickness:0.12, havingSize: true, max: 20},
-                'Clips': {id:'clips', label:'クリップ', weight:0.42, thickness:1.0, havingSize: false, max: 5}
+            // コンポーネント用の配列
+            const components = [
+                {id:'NormalPaper', label:'普通紙', weight:55, thickness:0.12, havingSize: true, max: 20},
+                {id:'HeavyPaper', label:'厚紙', weight:120, thickness:0.15, havingSize: true, max: 10},
+                {id:'Clips', label:'クリップ', weight:0.42, thickness:1.0, havingSize: false, max: 5}
                 // コンポーネントを適宜追加
-            }
+            ]
 
             // サイズ一覧
-            const sizeMap = {
-                'none': [' -- ', ' -- '],
-                'A4': ['297', '210'],
-                'B4': ['364', '257']
+            const sizeStandard = {
+                'none': {long:' -- ', short:' -- '},
+                'A4': {long:297, short:210},
+                'B4': {long:364, short:257}
             }    
 
             // 封筒ボタンのデータセット
@@ -143,7 +81,7 @@
             }   
             
             // データ取得
-            const inclusionContainer = document.getElementById('inclusion'); // 内容物
+            // const inclusionContainer = document.getElementById('inclusion'); // 内容物
             const envelopeArea = document.getElementById('envelope-select'); // 封筒
             // 出力エリア
             const displaySize = document.getElementById("display-size-area");
@@ -151,78 +89,177 @@
             const displayThickness = document.getElementById("display-thickness-area");
             const displayMailType = document.getElementById("display-mailtype");
             const displayPostage = document.getElementById("display-postage");
-
-            const componentInstances = componentsData.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
-
-            // 画面上の要素が変更された場合、対応するインスタンスのデータを更新
-            componentsInstances.forEach(instance => {
-                instance.updateUI();
-            });
             
-
-
+            let outerLong, outerShort;
             
-            // 内容物変更時の処理
-            let thicknes_1, weight_1, thickness_2, weight_2;
-            let inclLongSide, inclShortSide, inclTotalWeight, inclTotalThicknes;
+            
+            // 内容物のクラス
+            class Inclusion {
+                constructor(key, label, weightStandard, thickness, havingSize, max){
+                    this.key = key;
+                    this.label = label;
+                    this.basicWeight = weightStandard / (788 * 1091);
+                    this.totalWeight = 0;
+                    this.basicThickness = thickness;
+                    this.totalThickness = 0;
+                    this.havingSize = havingSize;
+                    this.longSide = 0;
+                    this.shortSide = 0;
+                    this.quantity = 0;
+                    this.quantityMax = max;
+                    this.createElements(); // インスタンス作成時に画面要素を作成
+                    this.attachListeners(); // 作成した画面要素にイベントリスナーを付与
+                }
+
+                createElements() {
+                    // 要素を配置するdivを定義
+                    const div = document.createElement('div');
+                    document.getElementById('inclusion').appendChild(div);
+        
+                    // 内容物のラベル
+                    const label = document.createElement('label');
+                    label.textContent = this.label;
+                    div.appendChild(label);
+        
+                    // サイズ選択ドロップメニューを作成（サイズないものには非表示）
+                    const sizeSelectMenu = document.createElement('select');
+                    sizeSelectMenu.id = this.key + '-size'; 
+                    if (this.havingSize) {
+                        for (const size in sizeStandard) {
+                            const option = document.createElement('option');
+                            option.value = size;
+                            option.text = size;
+                            sizeSelectMenu.appendChild(option);
+                        }
+                    }else{
+                        sizeSelectMenu.disabled = true;
+                    }
+                    div.appendChild(sizeSelectMenu);
+
+                    // 数量選択ドロップメニューを表示
+                    const quantityInputMenu = document.createElement('select');
+                    quantityInputMenu.id = this.key + '-quantity';
+                    for (let i = 0; i <= this.quantityMax; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.text = i;
+                        quantityInputMenu.appendChild(option);
+                    }
+                    div.appendChild(quantityInputMenu);
+                    
+                    // 二つor三つ折りラジオボタンを表示
+                    // const foldInto = document.createElement('input');
+                    // foldInto.id = this.key + '-fold';
+                    // div.appendChild(foldInto);
+                }
+                
+                attachListeners() {
+                // ドロップダウンメニューに変更時のイベントリスナーを設置
+                    const paperSizeSelect = document.getElementById(this.key + '-size');
+                    const quantitySelect = document.getElementById(this.key + '-quantity');
+                    
+                    paperSizeSelect.addEventListener('change', this.updateInstance.bind(this));
+                    quantitySelect.addEventListener('change', this.updateInstance.bind(this));
+                }
+
+                updateInstance() {
+                    const paperSizeSelect = document.getElementById(this.key + '-size');
+                    const quantitySelect = document.getElementById(this.key + '-quantity');
+        
+                    const selectedPaperSize = paperSizeSelect.value;
+                    const quantity = Number(quantitySelect.value);
+                    
+                    this.papersize = selectedPaperSize;
+                    this.longSide = sizeStandard[this.papersize].long;
+                    this.shortSide = sizeStandard[this.papersize].short;
+                    
+                    this.quantity = quantity;
+                    this.totalWeight= (this.basicWeight * this.longSide * this.shortSide * this.quantity).toFixed(1);
+                    this.totalThickness = (this.basicThickness * quantity).toFixed(1);
+                    
+                    outerLong = calculateOuterSize('longSide');
+                    outerShort = calculateOuterSize(this.short);
+                    console.log(outerLong,outerShort);
+                }
+            }
+            
+            // インスタンスから画面要素を作成
+            const componentsInstances = components.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
+
+            // let needOuterSide;
+
+            function calculateOuterSize(side){
+                console.log(componentsInstances);
+                const outerSide = side;
+                // needOuterSide = componentsInstances.reduce((max, instance) => {
+                //     return Math.max(max, instance.outerSide);
+                // }, -Infinity);
+                // return needOuterSide
+                return componentsInstances.reduce((max, instance) => {
+                    // return Math.max(max, instance.outerSide);
+                    return Math.max(max, instance.longSide); // どう代入？
+                }, -Infinity);
+
+                // console.log(needOuterSide);
+            }
 
 
-            inclusionContainer.addEventListener('change', function(event) {
-                getInclusion(); // 内容物の情報を取得
-                updateInclusion(); // 変数に格納
+            // inclusionContainer.addEventListener('change', function(event) {
+                // getInclusion(); // 内容物の情報を取得
+                // updateInclusion(); // 変数に格納
                 // generateInclusionArray();　// まだ作ってない
-                calculate(); // サイズなどの計算
-                generateEnvelopeButtons();
-            });    
+                // calculate(); // サイズなどの計算
+                // generateEnvelopeButtons();
+            // });    
             
-            function getInclusion(){
-                if (normalPages.value != 0){
-                    const normalPaperSize = sizeMap[normalSize.value];
-                    Normal.long = normalPaperSize[0];
-                    Normal.short = normalPaperSize[1];
-                }else{
-                    Normal.long = 0;
-                    Normal.short = 0;
-                }
+            // function getInclusion(){
+            //     if (normalPages.value != 0){
+            //         const normalPaperSize = sizeStandard[normalSize.value];
+            //         Normal.long = normalPaperSize[0];
+            //         Normal.short = normalPaperSize[1];
+            //     }else{
+            //         Normal.long = 0;
+            //         Normal.short = 0;
+            //     }
                 
-                if (heavyPages.value != 0){
-                    const heavyPaperSize = sizeMap[heavySize.value];
-                    Heavy.long = heavyPaperSize[0];
-                    Heavy.short = heavyPaperSize[1];
-                }else{
-                    Heavy.long = 0;
-                    Heavy.short = 0;
-                }
-            }    
+            //     if (heavyPages.value != 0){
+            //         const heavyPaperSize = sizeStandard[heavySize.value];
+            //         Heavy.long = heavyPaperSize[0];
+            //         Heavy.short = heavyPaperSize[1];
+            //     }else{
+            //         Heavy.long = 0;
+            //         Heavy.short = 0;
+            //     }
+            // }    
 
-            function updateInclusion(){
-                thickness_1 = Normal.thickness * normalPages.value;
-                weight_1 = (Normal.weight * normalPages.value / (788 * 1091) * Normal.long * Normal.short).toFixed(2); //四六判から選択サイズに変換する（未完
+            // function updateInclusion(){
+            //     thickness_1 = Normal.thickness * normalPages.value;
+            //     weight_1 = (Normal.weight * normalPages.value / (788 * 1091) * Normal.long * Normal.short).toFixed(2); //四六判から選択サイズに変換する（未完
 
-                thickness_2 = Heavy.thickness * heavyPages.value;
-                weight_2 = (Heavy.weight * heavyPages.value / (788 * 1091) * Heavy.long * Heavy.short).toFixed(2); //四六判から選択サイズに変換する（未完
-            }    
+            //     thickness_2 = Heavy.thickness * heavyPages.value;
+            //     weight_2 = (Heavy.weight * heavyPages.value / (788 * 1091) * Heavy.long * Heavy.short).toFixed(2); //四六判から選択サイズに変換する（未完
+            // }    
             
 
-            function calculate() {
-                if (Normal.long > Heavy.long){
-                    inclLongSide = Normal.long;
-                }else{
-                    inclLongSide = Heavy.long;
-                }
+            // function calculate() {
+            //     if (Normal.long > Heavy.long){
+            //         inclLongSide = Normal.long;
+            //     }else{
+            //         inclLongSide = Heavy.long;
+            //     }
 
-                if (Normal.short > Heavy.short){
-                    inclShortSide = Normal.short;
-                }else{
-                    inclShortSide = Heavy.short;
-                }
+            //     if (Normal.short > Heavy.short){
+            //         inclShortSide = Normal.short;
+            //     }else{
+            //         inclShortSide = Heavy.short;
+            //     }
 
-                inclTotalWeight = Number(weight_1) + Number(weight_2);
-                displayWeight.textContent = `${inclTotalWeight} g`;
+            //     inclTotalWeight = Number(weight_1) + Number(weight_2);
+            //     displayWeight.textContent = `${inclTotalWeight} g`;
                 
-                inclTotalThicknes = Number(thickness_1) + Number(thickness_2);
-                displayThickness.textContent = `${inclTotalThicknes} mm`;
-            }    
+            //     inclTotalThicknes = Number(thickness_1) + Number(thickness_2);
+            //     displayThickness.textContent = `${inclTotalThicknes} mm`;
+            // }    
 
             function generateEnvelopeButtons() { 
                 envelopeArea.innerHTML = ''; // 既存のボタンを削除
@@ -238,10 +275,11 @@
                     }
                 })
 
-                const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
-                envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
-                
             }
+            //     const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
+            //     envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
+                
+            // }
 
 
             // 封筒ボタン選択時の処理
@@ -276,12 +314,12 @@
             }
 
             
-            // 初期化処理
-            function initialize() { 
-            }
+            // // 初期化処理
+            // function initialize() { 
+            // }
             
-            // 画面読み込み時に初期化処理を行う
-            document.addEventListener('DOMContentLoaded', initialize);
+            // // 画面読み込み時に初期化処理を行う
+            // document.addEventListener('DOMContentLoaded', initialize);
                 
 
         </script>

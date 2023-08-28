@@ -42,14 +42,6 @@
     border-bottom: 1px solid var(--main-color);
 }
 
-.inclusion-1 {
-    display: flex;
-}
-
-.inclusion-2 {
-    display: flex;
-}
-
 .accordion-btn {
     width: 100%;
     background-color: var(--main-color);
