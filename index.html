@@ -60,8 +60,9 @@
             // コンポーネント用の配列
             const components = [
                 {id:'NormalPaper', label:'普通紙', weight:55, thickness:0.12, havingSize: true, max: 20},
-                {id:'HeavyPaper', label:'厚紙', weight:120, thickness:0.15, havingSize: true, max: 10},
-                {id:'Clips', label:'クリップ', weight:0.42, thickness:1.0, havingSize: false, max: 5}
+                {id:'HeavyPaper', label:'厚紙', weight:90, thickness:0.15, havingSize: true, max: 10},
+                {id:'ClearFile', label:'クリアファイル', weight:120, thickness:1.5, havingSize: true, max: 5},
+                {id:'Clips', label:'クリップ', weight:120, thickness:1.0, havingSize: false, max: 5}
                 // コンポーネントを適宜追加
             ]
 
@@ -98,7 +99,7 @@
                 constructor(key, label, weightStandard, thickness, havingSize, max){
                     this.key = key;
                     this.label = label;
-                    this.basicWeight = weightStandard / (788 * 1091);
+                    this.basicWeight = weightStandard / (788 * 1091); // 紙の重さを、 kg/四六判(788mm*1091mm)1000枚　→　g/1mm2　に変換する
                     this.totalWeight = 0;
                     this.basicThickness = thickness;
                     this.totalThickness = 0;
@@ -174,34 +175,27 @@
                     this.shortSide = sizeStandard[this.papersize].short;
                     
                     this.quantity = quantity;
-                    this.totalWeight= (this.basicWeight * this.longSide * this.shortSide * this.quantity).toFixed(1);
-                    this.totalThickness = (this.basicThickness * quantity).toFixed(1);
+                    this.totalWeight= Number((this.basicWeight * this.longSide * this.shortSide * this.quantity).toFixed(1));
+                    this.totalThickness = Number((this.basicThickness * quantity).toFixed(1));
+                    console.log(this.key, this.totalWeight, this.totalThickness)
                     
-                    outerLong = calculateOuterSize('longSide');
-                    outerShort = calculateOuterSize(this.short);
+                    outerLong = componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), 0);
+                    outerShort = componentsInstances.reduce((max, instance) => Math.max(max, instance.shortSide), -Infinity);
                     console.log(outerLong,outerShort);
+
+                    weightAndThickness();
+                    generateEnvelopeButtons();
                 }
             }
             
             // インスタンスから画面要素を作成
             const componentsInstances = components.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
 
-            // let needOuterSide;
 
-            function calculateOuterSize(side){
-                console.log(componentsInstances);
-                const outerSide = side;
-                // needOuterSide = componentsInstances.reduce((max, instance) => {
-                //     return Math.max(max, instance.outerSide);
-                // }, -Infinity);
-                // return needOuterSide
-                return componentsInstances.reduce((max, instance) => {
-                    // return Math.max(max, instance.outerSide);
-                    return Math.max(max, instance.longSide); // どう代入？
-                }, -Infinity);
-
-                // console.log(needOuterSide);
-            }
+            // function calculateOuterSize(){
+            //     console.log(componentsInstances);
+            //     return componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), -Infinity);
+            // }
 
 
             // inclusionContainer.addEventListener('change', function(event) {
@@ -212,75 +206,34 @@
                 // generateEnvelopeButtons();
             // });    
             
-            // function getInclusion(){
-            //     if (normalPages.value != 0){
-            //         const normalPaperSize = sizeStandard[normalSize.value];
-            //         Normal.long = normalPaperSize[0];
-            //         Normal.short = normalPaperSize[1];
-            //     }else{
-            //         Normal.long = 0;
-            //         Normal.short = 0;
-            //     }
+            function weightAndThickness() {
+                inclTotalWeight = componentsInstances.map(item => item.totalWeight).reduce((prev, curr) => prev + curr, 0);
+                displayWeight.textContent = `${inclTotalWeight} g`;
                 
-            //     if (heavyPages.value != 0){
-            //         const heavyPaperSize = sizeStandard[heavySize.value];
-            //         Heavy.long = heavyPaperSize[0];
-            //         Heavy.short = heavyPaperSize[1];
-            //     }else{
-            //         Heavy.long = 0;
-            //         Heavy.short = 0;
-            //     }
-            // }    
-
-            // function updateInclusion(){
-            //     thickness_1 = Normal.thickness * normalPages.value;
-            //     weight_1 = (Normal.weight * normalPages.value / (788 * 1091) * Normal.long * Normal.short).toFixed(2); //四六判から選択サイズに変換する（未完
-
-            //     thickness_2 = Heavy.thickness * heavyPages.value;
-            //     weight_2 = (Heavy.weight * heavyPages.value / (788 * 1091) * Heavy.long * Heavy.short).toFixed(2); //四六判から選択サイズに変換する（未完
-            // }    
-            
-
-            // function calculate() {
-            //     if (Normal.long > Heavy.long){
-            //         inclLongSide = Normal.long;
-            //     }else{
-            //         inclLongSide = Heavy.long;
-            //     }
-
-            //     if (Normal.short > Heavy.short){
-            //         inclShortSide = Normal.short;
-            //     }else{
-            //         inclShortSide = Heavy.short;
-            //     }
-
-            //     inclTotalWeight = Number(weight_1) + Number(weight_2);
-            //     displayWeight.textContent = `${inclTotalWeight} g`;
-                
-            //     inclTotalThicknes = Number(thickness_1) + Number(thickness_2);
-            //     displayThickness.textContent = `${inclTotalThicknes} mm`;
-            // }    
+                inclTotalThicknes = componentsInstances.map(item => item.totalThickness).reduce((prev, curr) => prev + curr, 0);
+                displayThickness.textContent = `${inclTotalThicknes} mm`;
+            }    
 
             function generateEnvelopeButtons() { 
                 envelopeArea.innerHTML = ''; // 既存のボタンを削除
 
                 Object.keys(envelopeData).forEach(envelopeId => {
                     const data = envelopeData[envelopeId];
-                    if(data.long > inclLongSide && data.short > inclShortSide){
+                    if(data.long > outerLong && data.short > outerShort){
                         const button = document.createElement("button");
                         button.id = envelopeId;
                         button.textContent = `${envelopeData[envelopeId].value}`;
                         button.classList.add('envelope-btn');
                         envelopeArea.appendChild(button);
                     }
-                })
+                });
+
+                const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
+                envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
 
             }
-            //     const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
-            //     envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
-                
-            // }
 
+                
 
             // 封筒ボタン選択時の処理
 
