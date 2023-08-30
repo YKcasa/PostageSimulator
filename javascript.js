@@ -31,6 +31,42 @@ const envelopeData = {
   'T4': {value:"長型４号", long:205, short:90}
 }   
 
+// 郵便種別メッセージ
+const postalClassMessage = [
+  {id:'calculating', message:'計算中です・・・'},
+  {id:'standard', message:'定形郵便物'},
+  {id:'nonstandard', message:'定形外・規格内郵便物'},
+  {id:'extra', message:'定形外・規格外郵便物'},
+  {id:'parcel', message:'郵便小包での扱いとなります'},
+]
+
+// 定形郵便物
+const standardPostageArray = [
+  { weight:25, fee:84 },
+  { weight:50, fee:94 },
+];
+
+// 定形外・規格内郵便物
+const nonstandardPostageArray = [
+  { weight:50, fee:120 },
+  { weight:100, fee:140 },
+  { weight:150, fee:210 },
+  { weight:250, fee:250 },
+  { weight:500, fee:390 },
+  { weight:1000, fee:580 },
+];
+
+// 定形外・規格外郵便物
+const extraPostageArray = [
+  { weight:50, fee:200 },
+  { weight:100, fee:220 },
+  { weight:150, fee:300 },
+  { weight:250, fee:350 },
+  { weight:500, fee:510 },
+  { weight:1000, fee:710 },
+  { weight:2000, fee:1040 },
+  { weight:4000, fee:1350 },
+];  
 
 
 // // 点滅表示

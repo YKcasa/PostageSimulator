@@ -27,32 +27,34 @@
                 </div>
             </div>
             <div class="footer">
-                <p>Yuuki Kajiyama 2023</p>
+                <p>フッター</p>
             </div>
         </div>
         <div class="simulation-area">
-            <div class="simu-upper">
-                <div class="result-1">
-                    <p>郵便料金<span>（目安）</span></p>
-                    <div id="display-postage"></div>
+            <div class="simu-container">
+                <div class="simu-upper">
+                    <div class="result-1">
+                        <p>郵便料金<span>（目安）</span></p>
+                        <div id="display-postage"></div>
+                    </div>
+                    <div class="result-2">
+                        <div id="display-mailtype"></div>
+                        <div id="display-postage-limit"></div>
+                    </div>
                 </div>
-                <div class="result-2">
-                    <div id="display-mailtype"></div>
-                    <div id="display-postage-limit"></div>
-                </div>
-            </div>
-            <div class="simu-downer">
-                <div class="simu-size">
-                    <p>サイズ</p>
-                    <div id="display-size-area"></div>
-                </div>
-                <div class="simu-thickness">
-                    <p>厚み</p>
-                    <div id="display-thickness-area"></div>
-                </div>
-                <div class="simu-weight">
-                    <p>重さ</p>
-                    <div id="display-weight-area"></div>
+                <div class="simu-downer">
+                    <div class="simu-size">
+                        <p>サイズ</p>
+                        <div id="display-size-area"></div>
+                    </div>
+                    <div class="simu-thickness">
+                        <p>厚み</p>
+                        <div id="display-thickness-area"></div>
+                    </div>
+                    <div class="simu-weight">
+                        <p>重さ</p>
+                        <div id="display-weight-area"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -203,7 +205,7 @@
             // 封筒ボタン選択時の処理
             function forResult(){
                 envelopeCalculate();
-                postageCalculate();
+                postalClassify();
             }
 
             function envelopeCalculate(){ // 封筒サイズをサイズ欄に表示する
@@ -213,22 +215,36 @@
                 evlpLongSide = selectedEnvelopeSize.long;
                 evlpShortSide = selectedEnvelopeSize.short;
                 displaySize.textContent = `${evlpLongSide}mm × ${evlpShortSide}mm`;
-                setTimeout(flashOff(displaySize),1000);
-                setTimeout(flashOn(displaySize),1000);
             }
 
 
             // 郵便種別判定処理
-            function postageCalculate() {
+            function postalClassify() {
+                let diplayFee;
                 if (evlpLongSide <= 340 && evlpShortSide <= 250){
                     if (evlpLongSide <= 235 && evlpShortSide <= 120){
                         displayMailType.textContent = `定形郵便物です`;
+                        displayFee = postageCalculate(standardPostageArray, inclTotalWeight);
                     }else{
                         displayMailType.textContent = `定形外・規格内郵便物です`;
+                        displayFee = postageCalculate(nonstandardPostageArray, inclTotalWeight);
                     }
                 }else{
                     displayMailType.textContent = `定形外・規格外郵便物です`;
+                    displayFee = postageCalculate(extraPostageArray, inclTotalWeight);
                 }
+
+                displayPostage.textContent = `${displayFee} 円`;
+            }
+
+            function postageCalculate(postalClassArray, weight) {
+                const weightForPostageCalc = weight;
+                const array = postalClassArray;
+                for (i = 0; i < array.length; i++){
+                if (weightForPostageCalc <= array[i].weight){
+                    return array[i].fee;
+                };
+            }
             }
 
 
@@ -237,7 +253,7 @@
                 componentsInstances = components.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
             }
             
-            // // 画面読み込み時に初期化処理を行う
+            // 画面読み込み時に初期化処理を行う
             document.addEventListener('DOMContentLoaded', initialize);
                 
 

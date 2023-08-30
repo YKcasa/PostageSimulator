@@ -11,13 +11,17 @@
 }
 
 :root{
+    /* 色の指定 */
     --main-color: #336633;
     --main-color-rgb: 51,102,51;
     --main-font-dark: #224422;
     --main-font-light: #f5f2ef;
-    --black: #003300;
     --emphasis: #d16b1c;
     --emphasis-rgb: 209,107,28;
+    --black: #003300;
+    --gray: #778877;
+    /* サイズの指定 */
+    --box-width: 380px;
 }
 
 
@@ -41,7 +45,7 @@
 }
 
 .menu-box {
-    width: 380px;
+    width: var(--box-width);
     margin: 100px auto;
 }
 
@@ -127,7 +131,12 @@
     position: fixed;
     bottom: 0;
     z-index: 10;
+}
 
+.simu-container {
+    width: var(--box-width);
+    margin: 0 auto;
+    background-color: var(--main-font-light);
 }
 
 /* 結果表示エリア */
@@ -156,7 +165,9 @@
 
 #display-postage {
     width: 45%;
-    text-align: left;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
 }
 
 .result-2 {
@@ -178,7 +189,10 @@
     height: 80px;
     margin: 7px;
     padding: 0px 5px;
-    background-color: var(--main-font-light);
-    transition: 1s;
 }
 
+/* フッター */
+.footer p{
+    color: var(--gray);
+    font-size: 12px;
+}
