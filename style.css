@@ -15,13 +15,25 @@
     --main-color-rgb: 51,102,51;
     --main-font-dark: #224422;
     --main-font-light: #f5f2ef;
+    --black: #003300;
     --emphasis: #d16b1c;
+    --emphasis-rgb: 209,107,28;
 }
 
+
+/* ヘッダー */
 .header {
+    margin: 15px;
     text-align: center;
 }
 
+.header h3 {
+    font-weight: normal;
+    color: var(--main-font-dark);
+}
+
+
+/* 本文部分 */
 .container {
     width: 90%;
     margin: 0 auto;
@@ -29,20 +41,24 @@
 }
 
 .menu-box {
-    width: 400px;
+    width: 380px;
     margin: 100px auto;
 }
 
 .input-area {
-    margin: 20px 0px;
+    margin: 30px 0px;
 }
 
 .input-area h2 {
-    margin-bottom: 5px;
-    border-bottom: 1px solid var(--main-color);
+    margin-bottom: 7px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(var(--main-color-rgb),0.7);
+    color: var(--black);
+    font-weight: 200;
+    font-size: 20px;
 }
 
-.accordion-btn {
+/* .accordion-btn {
     width: 100%;
     background-color: var(--main-color);
     color: var(--main-font-light);
@@ -51,46 +67,118 @@
 .accordion-panel {
     display: none;
     color: var(--main-font-dark);
-  }
+  } */
+
+
+/* 動的コンポーネント関連 */
+
+.inclusion select {
+    margin: 0px 8px;
+    font-size: 16px;
+    color: var(--main-font-dark);
+}
+
+.inclusion {
+    margin: 5px;
+    line-height: 28px;
+    color: var(--black);
+}
 
 .envelope-btn {
     height: 36px;
-    width: 70px;
+    width: 84px;
     margin: 5px;
+    border-radius: 7px;
+    border: 1px solid var(--main-font-dark);
     background-color: var(--main-font-light);
     color: var(--main-font-dark);
+    font-size: 16px;
+    /* animation: fadeIn 0.2s ease 0.3s 1 normal; */
+}
+
+/* @keyframes fadeIn{
+    0% {opacity: 0}
+    100% {opacity: 1}
+} */
+
+.envelope-btn:hover {
+    border: 1px solid var(--emphasis);
+    background-color: rgba(var(--emphasis-rgb),0.1);
+    transition: 0.5s;
+    
+}
+
+.envelope-btn:focus {
+    background-color: var(--main-font-dark);
+    color: var(--main-font-light);
+    transition: 0.5s;
 }
 
 .button-area {
     display: flex;
 }
 
-.simu-left {
-    display: flex;
-    margin: 5px;
-}
-
-.simu-size, .simu-weight, .simu-thickness {
-    width: 100px;
-    margin: 5px;
-    padding: 5px;
-    background-color: var(--main-font-light);
-}
-
+/* シミュレーションエリア全体 */
 .simulation-area {
-    display: flex;
     width: 100%;
-    height: 100px;
-    margin: 5px;
+    /* height: 160px; */
+    height: auto;
     background-color: rgba(var(--main-color-rgb),0.2);
-    /* opacity: 0.2; */
     position: fixed;
     bottom: 0;
     z-index: 10;
+
 }
 
-
-.arrow {
-    color: var(--emphasis);
-    font-weight: bold;
+/* 結果表示エリア */
+.simu-upper {
+    /* display: flex; */
+    /* height: 50px; */
+    height: 60px;
+    margin: 10px;
+    text-align: center;
 }
+
+.result-1 {
+    display: flex;
+    justify-content: center;
+    line-height: 40px;
+}
+
+.result-1 p {
+    font-size: 18px;
+    text-align: right;
+}
+
+.result-1 span {
+    font-size: -2;
+}
+
+#display-postage {
+    width: 45%;
+    text-align: left;
+}
+
+.result-2 {
+    display: flex;
+    justify-content: center;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+/* 情報表示エリア */
+.simu-downer {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.simu-size, .simu-weight, .simu-thickness {
+    width: 30%;
+    height: 80px;
+    margin: 7px;
+    padding: 0px 5px;
+    background-color: var(--main-font-light);
+    transition: 1s;
+}
+

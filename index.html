@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>郵便料金シミュレーション ver0.9</title>
+        <title>郵便料金シミュレーション ver0.90</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <div class="header">
-            <h3>郵便料金シミュレーション　β版</h3>
+            <h3>郵便料金シミュレーション　ver0.9</h3>
         </div>
         <div class="container">
             <div class="menu-box" id="menu">
@@ -27,71 +27,51 @@
                 </div>
             </div>
             <div class="footer">
-                <p>フッター</p>
+                <p>Yuuki Kajiyama 2023</p>
             </div>
         </div>
         <div class="simulation-area">
-            <div class="simu-left">
+            <div class="simu-upper">
+                <div class="result-1">
+                    <p>郵便料金<span>（目安）</span></p>
+                    <div id="display-postage"></div>
+                </div>
+                <div class="result-2">
+                    <div id="display-mailtype"></div>
+                    <div id="display-postage-limit"></div>
+                </div>
+            </div>
+            <div class="simu-downer">
                 <div class="simu-size">
                     <p>サイズ</p>
                     <div id="display-size-area"></div>
-                </div>
-                <div class="simu-weight">
-                    <p>重さ</p>
-                    <div id="display-weight-area"></div>
                 </div>
                 <div class="simu-thickness">
                     <p>厚み</p>
                     <div id="display-thickness-area"></div>
                 </div>
-            </div>
-            <div class="arrow"><p>→</p></div>
-            <div class="simu-right">
-                <div class="result">
-                    <p>結果をここに表示</p>
-                    <div id="display-mailtype"></div>
-                    <div id="display-postage"></div>
+                <div class="simu-weight">
+                    <p>重さ</p>
+                    <div id="display-weight-area"></div>
                 </div>
             </div>
         </div>
         <script src="javascript.js"></script>
         <script>
 
-            // コンポーネント用の配列
-            const components = [
-                {id:'NormalPaper', label:'普通紙', weight:55, thickness:0.12, havingSize: true, max: 20},
-                {id:'HeavyPaper', label:'厚紙', weight:90, thickness:0.15, havingSize: true, max: 10},
-                {id:'ClearFile', label:'クリアファイル', weight:120, thickness:1.5, havingSize: true, max: 5},
-                {id:'Clips', label:'クリップ', weight:120, thickness:1.0, havingSize: false, max: 5}
-                // コンポーネントを適宜追加
-            ]
-
-            // サイズ一覧
-            const sizeStandard = {
-                'none': {long:' -- ', short:' -- '},
-                'A4': {long:297, short:210},
-                'B4': {long:364, short:257}
-            }    
-
-            // 封筒ボタンのデータセット
-            const envelopeData = {
-                'K1': {value:"角型１号", long:382, short:270},
-                'K2': {value:"角型２号", long:332, short:240},
-                'T2': {value:"長型２号", long:277, short:119},
-                'T4': {value:"長型４号", long:205, short:90}
-            }   
-            
-            // データ取得
-            // const inclusionContainer = document.getElementById('inclusion'); // 内容物
+            // 封筒ボタン表示用
             const envelopeArea = document.getElementById('envelope-select'); // 封筒
-            // 出力エリア
+            // シミュレーションエリア表示用
+            const displayMailType = document.getElementById("display-mailtype");
+            const displayPostage = document.getElementById("display-postage");
             const displaySize = document.getElementById("display-size-area");
             const displayWeight = document.getElementById("display-weight-area");
             const displayThickness = document.getElementById("display-thickness-area");
-            const displayMailType = document.getElementById("display-mailtype");
-            const displayPostage = document.getElementById("display-postage");
             
-            let outerLong, outerShort;
+            // 変数定義
+            let outerLong, outerShort, evlpLongSide, evlpShortSide;
+            let inclTotalWeight, inclTotalThicknes, totalWeight, totalThickness;
+            let componentsInstances;
             
             
             // 内容物のクラス
@@ -102,6 +82,7 @@
                     this.basicWeight = weightStandard / (788 * 1091); // 紙の重さを、 kg/四六判(788mm*1091mm)1000枚　→　g/1mm2　に変換する
                     this.totalWeight = 0;
                     this.basicThickness = thickness;
+                    this.thicknessFactor = 1;
                     this.totalThickness = 0;
                     this.havingSize = havingSize;
                     this.longSide = 0;
@@ -115,6 +96,7 @@
                 createElements() {
                     // 要素を配置するdivを定義
                     const div = document.createElement('div');
+                    div.classList.add('inclusion');
                     document.getElementById('inclusion').appendChild(div);
         
                     // 内容物のラベル
@@ -173,10 +155,11 @@
                     this.papersize = selectedPaperSize;
                     this.longSide = sizeStandard[this.papersize].long;
                     this.shortSide = sizeStandard[this.papersize].short;
+                    this.thicknessFactor = sizeStandard[this.papersize].thicknessFactor;
                     
                     this.quantity = quantity;
-                    this.totalWeight= Number((this.basicWeight * this.longSide * this.shortSide * this.quantity).toFixed(1));
-                    this.totalThickness = Number((this.basicThickness * quantity).toFixed(1));
+                    this.totalWeight= Number((this.basicWeight * this.longSide * this.shortSide * this.thicknessFactor * this.quantity).toFixed(1));
+                    this.totalThickness = Number((this.basicThickness * this.thicknessFactor * quantity).toFixed(1));
                     console.log(this.key, this.totalWeight, this.totalThickness)
                     
                     outerLong = componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), 0);
@@ -188,24 +171,6 @@
                 }
             }
             
-            // インスタンスから画面要素を作成
-            const componentsInstances = components.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
-
-
-            // function calculateOuterSize(){
-            //     console.log(componentsInstances);
-            //     return componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), -Infinity);
-            // }
-
-
-            // inclusionContainer.addEventListener('change', function(event) {
-                // getInclusion(); // 内容物の情報を取得
-                // updateInclusion(); // 変数に格納
-                // generateInclusionArray();　// まだ作ってない
-                // calculate(); // サイズなどの計算
-                // generateEnvelopeButtons();
-            // });    
-            
             function weightAndThickness() {
                 inclTotalWeight = componentsInstances.map(item => item.totalWeight).reduce((prev, curr) => prev + curr, 0);
                 displayWeight.textContent = `${inclTotalWeight} g`;
@@ -214,8 +179,9 @@
                 displayThickness.textContent = `${inclTotalThicknes} mm`;
             }    
 
-            function generateEnvelopeButtons() { 
-                envelopeArea.innerHTML = ''; // 既存のボタンを削除
+            function generateEnvelopeButtons() { // 内容物が入るサイズの封筒ボタンを表示、イベントリスナーを設置する
+                displaySize.textContent = '';
+                envelopeArea.innerHTML = ''; 
 
                 Object.keys(envelopeData).forEach(envelopeId => {
                     const data = envelopeData[envelopeId];
@@ -228,35 +194,34 @@
                     }
                 });
 
-                const envelopeButtons = document.querySelectorAll('.envelope-btn'); // envelope-btnを取得
+                const envelopeButtons = document.querySelectorAll('.envelope-btn');
                 envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
 
             }
 
                 
-
             // 封筒ボタン選択時の処理
-
-            let evlpLongSide, evlpShortSide, totalWeight, totalThickness;
-
             function forResult(){
                 envelopeCalculate();
                 postageCalculate();
             }
 
-            function envelopeCalculate(){
+            function envelopeCalculate(){ // 封筒サイズをサイズ欄に表示する
+                displaySize.textContent = '';
                 const selectedEnvelopeSize = envelopeData[event.target.id];
                 console.log(selectedEnvelopeSize);
                 evlpLongSide = selectedEnvelopeSize.long;
                 evlpShortSide = selectedEnvelopeSize.short;
                 displaySize.textContent = `${evlpLongSide}mm × ${evlpShortSide}mm`;
+                setTimeout(flashOff(displaySize),1000);
+                setTimeout(flashOn(displaySize),1000);
             }
 
 
             // 郵便種別判定処理
             function postageCalculate() {
                 if (evlpLongSide <= 340 && evlpShortSide <= 250){
-                    if (evlpLongSide <= 235 && evlpShortSide <= 12){
+                    if (evlpLongSide <= 235 && evlpShortSide <= 120){
                         displayMailType.textContent = `定形郵便物です`;
                     }else{
                         displayMailType.textContent = `定形外・規格内郵便物です`;
@@ -266,13 +231,14 @@
                 }
             }
 
-            
-            // // 初期化処理
-            // function initialize() { 
-            // }
+
+            // 初期化処理　配列データより、インスタンスを作成する
+            function initialize() {
+                componentsInstances = components.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
+            }
             
             // // 画面読み込み時に初期化処理を行う
-            // document.addEventListener('DOMContentLoaded', initialize);
+            document.addEventListener('DOMContentLoaded', initialize);
                 
 
         </script>
