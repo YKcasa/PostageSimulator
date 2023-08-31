@@ -39,7 +39,7 @@
                     </div>
                     <div class="result-2">
                         <div id="display-mailtype"></div>
-                        <div id="display-postage-limit"></div>
+                        <div id="display-weight-limit"></div>
                     </div>
                 </div>
                 <div class="simu-downer">
@@ -64,33 +64,35 @@
             // 封筒ボタン表示用
             const envelopeArea = document.getElementById('envelope-select'); // 封筒
             // シミュレーションエリア表示用
-            const displayMailType = document.getElementById("display-mailtype");
-            const displayPostage = document.getElementById("display-postage");
-            const displaySize = document.getElementById("display-size-area");
-            const displayWeight = document.getElementById("display-weight-area");
-            const displayThickness = document.getElementById("display-thickness-area");
+            const displayMailType = document.getElementById('display-mailtype');
+            const displayPostage = document.getElementById('display-postage');
+            const displayWeightLimit = document.getElementById('display-weight-limit');
+            const displaySize = document.getElementById('display-size-area');
+            const displayWeight = document.getElementById('display-weight-area');
+            const displayThickness = document.getElementById('display-thickness-area');
             
             // 変数定義
             let outerLong, outerShort, evlpLongSide, evlpShortSide;
             let inclTotalWeight, inclTotalThicknes, totalWeight, totalThickness;
             let componentsInstances;
+            let nextWeightLimit;
             
             
             // 内容物のクラス
             class Inclusion {
-                constructor(key, label, weightStandard, thickness, havingSize, max){
+                constructor(key, label, weightStandard, thickness, havingSize, canbeFolded, max){
                     this.key = key;
                     this.label = label;
                     this.basicWeight = weightStandard / (788 * 1091); // 紙の重さを、 kg/四六判(788mm*1091mm)1000枚　→　g/1mm2　に変換する
                     this.totalWeight = 0;
                     this.basicThickness = thickness;
-                    this.thicknessFactor = 1;
+                    this.foldingFactor = 1;
                     this.totalThickness = 0;
                     this.havingSize = havingSize;
                     this.longSide = 0;
                     this.shortSide = 0;
                     this.quantity = 0;
-                    this.quantityMax = max;
+                    this.quantityMax = max; // ドロップダウンメニューの最大値
                     this.createElements(); // インスタンス作成時に画面要素を作成
                     this.attachListeners(); // 作成した画面要素にイベントリスナーを付与
                 }
@@ -132,10 +134,8 @@
                     }
                     div.appendChild(quantityInputMenu);
                     
-                    // 二つor三つ折りラジオボタンを表示
-                    // const foldInto = document.createElement('input');
-                    // foldInto.id = this.key + '-fold';
-                    // div.appendChild(foldInto);
+                    // 二つor三つ折りラジオボタン（実装要検討）
+
                 }
                 
                 attachListeners() {
@@ -154,14 +154,19 @@
                     const selectedPaperSize = paperSizeSelect.value;
                     const quantity = Number(quantitySelect.value);
                     
-                    this.papersize = selectedPaperSize;
-                    this.longSide = sizeStandard[this.papersize].long;
-                    this.shortSide = sizeStandard[this.papersize].short;
-                    this.thicknessFactor = sizeStandard[this.papersize].thicknessFactor;
-                    
+                    if (this.havingSize){
+                        this.papersize = selectedPaperSize;
+                        this.longSide = sizeStandard[this.papersize].long;
+                        this.shortSide = sizeStandard[this.papersize].short;
+                        this.foldingFactor = sizeStandard[this.papersize].foldingFactor;
+                    }else{
+                        this.longSide = 1;
+                        this.shortSide = 1;
+                    }
+
                     this.quantity = quantity;
-                    this.totalWeight= Number((this.basicWeight * this.longSide * this.shortSide * this.thicknessFactor * this.quantity).toFixed(1));
-                    this.totalThickness = Number((this.basicThickness * this.thicknessFactor * quantity).toFixed(1));
+                    this.totalWeight= Number((this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity).toFixed(1));
+                    this.totalThickness = Number((this.basicThickness * this.foldingFactor * quantity).toFixed(1));
                     console.log(this.key, this.totalWeight, this.totalThickness)
                     
                     outerLong = componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), 0);
@@ -197,19 +202,18 @@
                 });
 
                 const envelopeButtons = document.querySelectorAll('.envelope-btn');
-                envelopeButtons.forEach(btns => btns.addEventListener('click', forResult));
+                envelopeButtons.forEach(btns => btns.addEventListener('click', calculatePostage));
 
             }
 
                 
             // 封筒ボタン選択時の処理
-            function forResult(){
-                envelopeCalculate();
+            function calculatePostage(){
+                loadEnvelopDatas();
                 postalClassify();
             }
 
-            function envelopeCalculate(){ // 封筒サイズをサイズ欄に表示する
-                displaySize.textContent = '';
+            function loadEnvelopDatas(){
                 const selectedEnvelopeSize = envelopeData[event.target.id];
                 console.log(selectedEnvelopeSize);
                 evlpLongSide = selectedEnvelopeSize.long;
@@ -217,40 +221,74 @@
                 displaySize.textContent = `${evlpLongSide}mm × ${evlpShortSide}mm`;
             }
 
-
+            
             // 郵便種別判定処理
             function postalClassify() {
                 let diplayFee;
-                if (evlpLongSide <= 340 && evlpShortSide <= 250){
-                    if (evlpLongSide <= 235 && evlpShortSide <= 120){
-                        displayMailType.textContent = `定形郵便物です`;
-                        displayFee = postageCalculate(standardPostageArray, inclTotalWeight);
-                    }else{
-                        displayMailType.textContent = `定形外・規格内郵便物です`;
-                        displayFee = postageCalculate(nonstandardPostageArray, inclTotalWeight);
-                    }
+                
+                if (inclTotalWeight > 4000){ // 4kg超は取扱い不可。除外
+                    displayMailType.textContent = "４ｋｇを超えるものは、手紙ではなくゆうパック等をお使いください";
+                }else if( evlpLongSide > 600 || (evlpLongSide + evlpShortSide + inclTotalThicknes) > 900 ){
+                    displayMailType.textContent = "９０サイズをオーバーしています。ゆうパック等をお使いください";
                 }else{
-                    displayMailType.textContent = `定形外・規格外郵便物です`;
-                    displayFee = postageCalculate(extraPostageArray, inclTotalWeight);
-                }
+                    if(inclTotalWeight > 1000){ // 1kg超は定形外・規格外
+                        displayMailType.textContent = `定形外郵便物・規格外です`;
+                        displayFee = determinePostage(extraPostageArray, inclTotalWeight);
+                    }else if(inclTotalWeight > 50){ // 50g超は定形外
+                        if (evlpLongSide > 340 || evlpShortSide > 250 || inclTotalThicknes > 30){
+                            displayMailType.textContent = `定形外郵便物・規格外です`;
+                            displayFee = determinePostage(extraPostageArray, inclTotalWeight);
+                        }else{
+                            displayMailType.textContent = `定形外郵便物・規格内です`;
+                            displayFee = determinePostage(nonstandardPostageArray, inclTotalWeight);
+                        }   
+                    }else{ //50g以内は大きさで３パターン
+                        if(evlpLongSide > 340 || evlpShortSide > 250 || inclTotalThicknes > 30){
+                            displayMailType.textContent = `定形外郵便物・規格外です`;
+                            displayFee = determinePostage(extraPostageArray, inclTotalWeight);
+                        }else if(evlpLongSide > 235 || evlpShortSide > 120 || inclTotalThicknes > 10){
+                            displayMailType.textContent = `定形外郵便物・規格内です`;
+                            displayFee = determinePostage(nonstandardPostageArray, inclTotalWeight);
+                        }else{
+                            displayMailType.textContent = `定形郵便物です`;
+                            displayFee = determinePostage(standardPostageArray, inclTotalWeight);
+                        };
+                    };
+                };
+    
+                // if (evlpLongSide <= 340 && evlpShortSide <= 250){
+                //     if (evlpLongSide <= 235 && evlpShortSide <= 120){
+                //         displayMailType.textContent = `定形郵便物です`;
+                //         displayFee = determinePostage(standardPostageArray, inclTotalWeight);
+                //     }else{
+                //         displayMailType.textContent = `定形外郵便物・規格内です`;
+                //         displayFee = determinePostage(nonstandardPostageArray, inclTotalWeight);
+                //     }
+                // }else{
+                //     displayMailType.textContent = `定形外郵便物・規格外です`;
+                //     displayFee = determinePostage(extraPostageArray, inclTotalWeight);
+                // }
 
                 displayPostage.textContent = `${displayFee} 円`;
+                displayWeightLimit.textContent = `${nextWeightLimit}ｇまで同一料金です`
+                
             }
 
-            function postageCalculate(postalClassArray, weight) {
-                const weightForPostageCalc = weight;
+            function determinePostage(postalClassArray, weight) {
+                const weightForDeterminePostage = weight;
                 const array = postalClassArray;
                 for (i = 0; i < array.length; i++){
-                if (weightForPostageCalc <= array[i].weight){
-                    return array[i].fee;
-                };
-            }
+                    if (weightForDeterminePostage <= array[i].weightLimit){
+                        nextWeightLimit = array[i].weightLimit;
+                        return array[i].fee;
+                    };
+                }
             }
 
 
             // 初期化処理　配列データより、インスタンスを作成する
             function initialize() {
-                componentsInstances = components.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.max));
+                componentsInstances = inclusions.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.havingSize, data.canbeFolded, data.max));
             }
             
             // 画面読み込み時に初期化処理を行う
