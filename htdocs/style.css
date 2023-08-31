@@ -12,7 +12,7 @@
 
 :root{
     /* 色の指定 */
-    --main-color: #336633;
+    --main-color: #3dc43d;
     --main-color-rgb: 51,102,51;
     --main-font-dark: #224422;
     --main-font-light: #f5f2ef;
@@ -20,9 +20,10 @@
     --emphasis-rgb: 209,107,28;
     --black: #003300;
     --gray: #778877;
+    --lightgray: #c9edc9;
     --white: #ffffff;
     /* サイズの指定 */
-    --box-width: 380px;
+    --box-width: 420px;
 }
 
 
@@ -41,9 +42,14 @@ header h3 {
 /* 本文部分 */
 .container {
     width: 90%;
-    height:700px;
+    height:1000px;
     margin: 0 auto;
     text-align: center;
+}
+
+.container p {
+    font-size: 14px;
+    color: var(--gray);
 }
 
 .menu-box {
@@ -56,7 +62,7 @@ header h3 {
 }
 
 .input-area h2 {
-    margin-bottom: 7px;
+    margin-bottom: 14px;
     padding-bottom: 5px;
     border-bottom: 1px solid rgba(var(--main-color-rgb),0.7);
     color: var(--black);
@@ -96,18 +102,18 @@ header h3 {
 }
 
 .inclusion {
-    margin: 5px;
-    line-height: 28px;
+    margin: 6px;
+    line-height: 32px;
     color: var(--black);
 }
 
 .envelope-btn {
-    height: 36px;
-    width: 84px;
+    height: 40px;
+    width: 90px;
     margin: 5px;
     border-radius: 10px;
-    border: 1px solid var(--main-font-dark);
-    background-color: var(--main-font-light);
+    border: 3px solid var(--lightgray);
+    background-color: var(--white);
     color: var(--main-font-dark);
     font-size: 16px;
     /* animation: fadeIn 0.2s ease 0.3s 1 normal; */
@@ -119,7 +125,7 @@ header h3 {
 } */
 
 .envelope-btn:hover {
-    border: 1px solid var(--emphasis);
+    border: 3px solid var(--emphasis);
     background-color: rgba(var(--emphasis-rgb),0.1);
     transition: 0.5s;
     
@@ -139,7 +145,9 @@ header h3 {
 .simulation-area {
     width: 100%;
     /* height: 160px; */
-    height: auto;
+    /* height: auto; */
+    height: 300px;
+    padding-top: 40px;
     background-color: rgba(var(--main-color-rgb),0.2);
     position: fixed;
     bottom: 0;
@@ -149,6 +157,7 @@ header h3 {
 .simu-container {
     width: var(--box-width);
     margin: 0 auto;
+    border-radius: 7px;
     background-color: var(--main-font-light);
 }
 
@@ -156,19 +165,19 @@ header h3 {
 .simu-upper {
     /* display: flex; */
     /* height: 50px; */
-    height: 60px;
-    margin: 10px;
+    height: auto;
+    padding: 20px;
     text-align: center;
 }
 
 .result-1 {
     display: flex;
     justify-content: center;
-    line-height: 40px;
+    line-height: 50px;
 }
 
 .result-1 p {
-    font-size: 18px;
+    font-size: 20px;
     text-align: right;
 }
 
@@ -179,7 +188,7 @@ header h3 {
 #display-postage {
     width: 45%;
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 400;
 }
 
@@ -197,11 +206,19 @@ header h3 {
     margin: 10px;
 }
 
-.simu-size, .simu-weight, .simu-thickness {
+.simu-display {
     width: 30%;
     height: 80px;
     margin: 7px;
     padding: 0px 5px;
+    font-size: 14px;
+    color: var(--gray);
+}
+
+.simu-display p {
+    margin-bottom: 3px;
+    font-size: 14px;
+    color: var(--gray)
 }
 
 /* フッター */

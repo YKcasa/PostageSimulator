@@ -11,9 +11,10 @@
             <h3>郵便料金シミュレーション　ver0.8</h3>
         </header>
         <div class="container">
+            <p>送りたいものと封筒のサイズから、郵便料金の目安を算出します</p>
             <div class="menu-box">
                 <div class="input-area">
-                    <h2><span>STEP 1</span>何を送りますか？</h2>
+                    <h2><span>STEP 1</span>送りたいものを選んでください（複数可）</h2>
                     <div id="inclusion"></div>
                 </div>
                 <!-- <button class="accordion-btn">ダミー：アコーディオンメニューの練習</button>
@@ -26,9 +27,6 @@
                     <div id="envelope-select"></div>
                 </div>
             </div>
-            <!-- <div class="footer">
-                <p>ここにフッター</p>
-            </div> -->
         </div>
         <div class="simulation-area">
             <div class="simu-container">
@@ -44,15 +42,15 @@
                     </div>
                 </div>
                 <div class="simu-downer">
-                    <div class="simu-size">
+                    <div class="simu-display">
                         <p>サイズ</p>
                         <div id="display-size-area"></div>
                     </div>
-                    <div class="simu-thickness">
+                    <div class="simu-display">
                         <p>厚み</p>
                         <div id="display-thickness-area"></div>
                     </div>
-                    <div class="simu-weight">
+                    <div class="simu-display">
                         <p>重さ</p>
                         <div id="display-weight-area"></div>
                     </div>
@@ -84,7 +82,7 @@
             
             // 内容物のクラス
             class Inclusion {
-                constructor(key, label, weight, thickness, type, max){
+                constructor(key, label, weight, thickness, type, max, unitName){
                     this.key = key;
                     this.label = label;
                     if (type == 'paper' || type == 'file'){
@@ -101,6 +99,7 @@
                     this.shortSide = 0;
                     this.quantity = 0;
                     this.quantityMax = max; // ドロップダウンメニューの最大値
+                    this.unitName = unitName;
                     this.standardArray = new Array();
                     this.createElements(); // インスタンス作成時に画面要素を作成
                     this.attachListeners(); // 作成した画面要素にイベントリスナーを付与
@@ -117,25 +116,9 @@
                     label.textContent = this.label;
                     div.appendChild(label);
         
-                    // サイズ選択ドロップメニューを作成（サイズないものには非表示）
-                    // const sizeSelectMenu = document.createElement('select');
-                    // sizeSelectMenu.id = this.key + '-size'; 
-                    // if (this.materialType === 'paper') {
-                    //     const test = paperSizeSelect;
-                    //     for (const size in test) {
-                    //         const option = document.createElement('option');
-                    //         option.value = size;
-                    //         option.text = size;
-                    //         sizeSelectMenu.appendChild(option);
-                    //     }
-                    // }else{
-                    //     sizeSelectMenu.disabled = true;
-                    // }
-                    // div.appendChild(sizeSelectMenu);
-                    
+                    // サイズ選択ドロップメニューを作成                    
                     const sizeSelectMenu = document.createElement('select');
                     sizeSelectMenu.id = this.key + '-size'; 
-                    // let standardArray = new Array();
                     const option = document.createElement('option');
                     
                     switch (this.materialType) {
@@ -147,9 +130,9 @@
                             break;
                         default:
                             this.standardArray = othersSize;
+                            sizeSelectMenu.disabled = true;
                     }
                             
-                    console.log(this.standardArray);
                     for(const size in this.standardArray){ 
                         const option = document.createElement('option');
                         option.value = size;
@@ -172,6 +155,11 @@
                     
                     // 二つor三つ折りラジオボタン（実装要検討）
 
+                    // 内容物のラベル
+                    const unitLabel = document.createElement('label');
+                    unitLabel.textContent = this.unitName;
+                    div.appendChild(unitLabel);
+                    
                 }
                 
                 attachListeners() {
@@ -331,7 +319,7 @@
 
             // 初期化処理　配列データより、インスタンスを作成する
             function initialize() {
-                componentsInstances = inclusions.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.type, data.max));
+                componentsInstances = inclusions.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.type, data.max, data.unitName));
             }
             
             // 画面読み込み時に初期化処理を行う

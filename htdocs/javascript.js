@@ -1,10 +1,10 @@
 // --- コンポーネント用の配列
 const inclusions = [
-  {id:'NormalPaper', label:'普通紙 : ', weight:55, thickness:0.12, type:'paper', canbeFolded:true, max: 20},
-  {id:'HeavyPaper', label:'厚紙 : ', weight:90, thickness:0.15, type:'paper', canbeFolded:true, max: 10},
-  {id:'ClearFile', label:'クリアファイル : ', weight:360, thickness:1.5, type:'file', canbeFolded:false, max: 5},
-  {id:'Clips', label:'クリップ : ', weight:0.5, thickness:1.0, type:'others', canbeFolded:false, max: 5},
-  {id:'Dummy', label:'テスト用おもり : ', weight:300, thickness:1.0, type:'others', canbeFolded:false, max: 30}
+  {id:'NormalPaper', label:'普通紙 : ', weight:55, thickness:0.12, type:'paper', max: 20, unitName:'枚'},
+  {id:'HeavyPaper', label:'厚紙 : ', weight:90, thickness:0.15, type:'paper', max: 10, unitName:'枚'},
+  {id:'ClearFile', label:'クリアファイル : ', weight:360, thickness:1.5, type:'file', max: 5, unitName:'枚'},
+  {id:'Clips', label:'クリップ : ', weight:1.3, thickness:1.0, type:'others', max: 5, unitName:'個'},
+  {id:'Dummy', label:'テスト用おもり : ', weight:300, thickness:1.0, type:'others', max: 30, unitName:'枚'}
   // コンポーネントを適宜追加
 ]
 
@@ -26,7 +26,7 @@ const fileSizeStandard = {
 }    
 
 const othersSize = {
-  'サイズは指定できません': {long:0, short:0, foldingFactor:1}
+  'サイズ指定できません': {long:0, short:0, foldingFactor:1}
 }    
 
 // --- 封筒ボタンのデータセット
