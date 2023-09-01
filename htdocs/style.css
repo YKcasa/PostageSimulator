@@ -71,6 +71,11 @@ header h3 {
     color: var(--black);
     font-weight: 200;
     font-size: 20px;
+    /* letter-spacing: 0.3em; */
+}
+
+.input-area h2 span {
+    font-size: 12px;
 }
 
 .input-area h4 {
@@ -100,9 +105,15 @@ header h3 {
 /* 動的コンポーネント関連 */
 
 .inclusion select {
+    visibility: visible;
     margin: 0px 8px;
     font-size: 16px;
     color: var(--main-font-dark);
+}
+
+.select-emphasis {
+    border: 1px solid var(--emphasis);
+    color: var(--emphasis);
 }
 
 .inclusion {

@@ -16,7 +16,7 @@
             <div class="menu-box">
                 <div class="input-area">
                     <h4>STEP 1</h4>
-                    <h2>送りたいものを選んでください（複数可）</h2>
+                    <h2>送りたいものを選んでください<span>（複数可）</span></h2>
                     <div id="inclusion"></div>
                 </div>
                 <!-- <button class="accordion-btn">ダミー：アコーディオンメニューの練習</button>
@@ -25,7 +25,8 @@
                     <input type="text" value="エラー処理めんどうだなあ"/>
                 </div> -->
                 <div class="input-area" id="envelope">
-                    <h2><span>STEP 2</span>封筒のサイズは？</h2>
+                    <h4>STEP2</h4>
+                    <h2>封筒のサイズは？</h2>
                     <div id="envelope-select"></div>
                 </div>
             </div>
@@ -194,8 +195,8 @@
                     }
 
                     this.quantity = quantity;
-                    this.totalWeight= Number((this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity).toFixed(1));
-                    this.totalThickness = Number((this.basicThickness * this.foldingFactor * quantity).toFixed(1));
+                    this.totalWeight= Number(this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity);
+                    this.totalThickness = Number(this.basicThickness * this.foldingFactor * quantity);
                     console.log(this.key, this.totalWeight, this.totalThickness)
                     
                     outerLong = componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), 0);
@@ -209,10 +210,10 @@
             
             function weightAndThickness() {
                 inclTotalWeight = componentsInstances.map(item => item.totalWeight).reduce((prev, curr) => prev + curr, 0);
-                displayWeight.textContent = `${inclTotalWeight} g`;
+                displayWeight.textContent = `${inclTotalWeight.toFixed(2)} g`;
                 
                 inclTotalThicknes = componentsInstances.map(item => item.totalThickness).reduce((prev, curr) => prev + curr, 0);
-                displayThickness.textContent = `${inclTotalThicknes} mm`;
+                displayThickness.textContent = `${inclTotalThicknes.toFixed(1)} mm`;
 
                 console.log(inclTotalThicknes,inclTotalWeight);
             }    
@@ -265,45 +266,32 @@
                     displayMailType.textContent = "９０サイズをオーバーしています。ゆうパック等をお使いください";
                 }else{
                     if(inclTotalWeight > 1000){ // 1kg超は定形外・規格外
-                        displayMailType.textContent = `定形外郵便物・規格外です`;
+                        displayMailType.textContent = `定形外郵便物・規格外`;
                         displayFee = determinePostage(extraPostageArray, inclTotalWeight);
                     }else if(inclTotalWeight > 50){ // 50g超は定形外
                         if (evlpLongSide > 340 || evlpShortSide > 250 || inclTotalThicknes > 30){
-                            displayMailType.textContent = `定形外郵便物・規格外です`;
+                            displayMailType.textContent = `定形外郵便物・規格外`;
                             displayFee = determinePostage(extraPostageArray, inclTotalWeight);
                         }else{
-                            displayMailType.textContent = `定形外郵便物・規格内です`;
+                            displayMailType.textContent = `定形外郵便物・規格内`;
                             displayFee = determinePostage(nonstandardPostageArray, inclTotalWeight);
                         }   
                     }else{ //50g以内は大きさで３パターン
                         if(evlpLongSide > 340 || evlpShortSide > 250 || inclTotalThicknes > 30){
-                            displayMailType.textContent = `定形外郵便物・規格外です`;
+                            displayMailType.textContent = `定形外郵便物・規格外`;
                             displayFee = determinePostage(extraPostageArray, inclTotalWeight);
                         }else if(evlpLongSide > 235 || evlpShortSide > 120 || inclTotalThicknes > 10){
-                            displayMailType.textContent = `定形外郵便物・規格内です`;
+                            displayMailType.textContent = `定形外郵便物・規格内`;
                             displayFee = determinePostage(nonstandardPostageArray, inclTotalWeight);
                         }else{
-                            displayMailType.textContent = `定形郵便物です`;
+                            displayMailType.textContent = `定形郵便物`;
                             displayFee = determinePostage(standardPostageArray, inclTotalWeight);
                         };
                     };
                 };
     
-                // if (evlpLongSide <= 340 && evlpShortSide <= 250){
-                //     if (evlpLongSide <= 235 && evlpShortSide <= 120){
-                //         displayMailType.textContent = `定形郵便物です`;
-                //         displayFee = determinePostage(standardPostageArray, inclTotalWeight);
-                //     }else{
-                //         displayMailType.textContent = `定形外郵便物・規格内です`;
-                //         displayFee = determinePostage(nonstandardPostageArray, inclTotalWeight);
-                //     }
-                // }else{
-                //     displayMailType.textContent = `定形外郵便物・規格外です`;
-                //     displayFee = determinePostage(extraPostageArray, inclTotalWeight);
-                // }
-
                 displayPostage.textContent = `${displayFee} 円`;
-                displayWeightLimit.textContent = `${nextWeightLimit}ｇまで同一料金です`
+                displayWeightLimit.textContent = `あと${(nextWeightLimit - inclTotalWeight).toFixed(1)}ｇまで同一料金です`
                 
             }
 
