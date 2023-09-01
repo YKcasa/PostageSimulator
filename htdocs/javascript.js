@@ -26,7 +26,7 @@ const fileSizeStandard = {
 }    
 
 const othersSize = {
-  'サイズ指定できません': {long:0, short:0, foldingFactor:1}
+  'サイズ指定なし': {long:0, short:0, foldingFactor:1}
 }    
 
 // --- 封筒ボタンのデータセット

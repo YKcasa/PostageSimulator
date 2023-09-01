@@ -6,36 +6,39 @@
     border: 0;
     text-decoration: none;
     vertical-align: center;
-    font-family: "Meiryo UI", "MSゴシック", "sans-serif";
+    font-family: "Meiryo UI", "MSゴシック", sans-serif;
     letter-spacing: 0.05em;
 }
 
 :root{
     /* 色の指定 */
-    --main-color: #3dc43d;
-    --main-color-rgb: 51,102,51;
+    --main-color: #CECE5A;
+    --main-color-rgb: 206,206,90;
     --main-font-dark: #224422;
     --main-font-light: #f5f2ef;
-    --emphasis: #d16b1c;
-    --emphasis-rgb: 209,107,28;
+    --emphasis: #FD8D14;
+    --emphasis-rgb: 253,141,20;
     --black: #003300;
     --gray: #778877;
     --lightgray: #c9edc9;
     --white: #ffffff;
     /* サイズの指定 */
-    --box-width: 420px;
+    --box-width: 380px;
 }
 
 
 /* ヘッダー */
 header {
-    margin: 15px;
-    text-align: center;
+    text-align: left;
+    background-color: var(--main-color);
 }
 
 header h3 {
-    font-weight: normal;
-    color: var(--main-font-dark);
+    font-weight: 600;
+    line-height: 20px;
+    font-size: 24px;
+    letter-spacing: 0.1em;
+    color: var(--main-font-light);
 }
 
 
@@ -70,8 +73,9 @@ header h3 {
     font-size: 20px;
 }
 
-.input-area span {
-    margin: 9px;
+.input-area h4 {
+    width: 64px;
+    margin: 0 auto;
     padding: 2px 7px;
     border-radius: 9px;
     background-color: rgba(var(--emphasis-rgb),0.8);
