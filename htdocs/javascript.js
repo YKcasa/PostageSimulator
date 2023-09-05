@@ -29,19 +29,27 @@ const othersSize = {
   'サイズ指定なし': {long:0, short:0, foldingFactor:1}
 }    
 
-// --- 封筒ボタンのデータセット
+// --- 内容物のtypeと読み込むサイズ一覧の対応表
+const sizeStandards = {
+  paper: paperSizeStandard,
+  file: fileSizeStandard,
+  default: othersSize
+}
+
+
+// --- 封筒ボタンのデータセット　注：重さは白色ケント紙85kgを想定
 const envelopeData = {
-  'K1': {value:"角型１号", long:382, short:270},
-  'K2': {value:"角型２号", long:332, short:240},
-  'K20': {value:"角型20号", long:324, short:229},
-  'K3': {value:"角型３号", long:277, short:216},
-  'T1': {value:"長型１号", long:332, short:142},
-  'T2': {value:"長型２号", long:277, short:119},
-  'T3': {value:"長型３号", long:235, short:120},
-  'T4': {value:"長型４号", long:205, short:90}
+  'K1': {value:"角型１号", long:382, short:270, weight:23},
+  'K2': {value:"角型２号", long:332, short:240, weight:18},
+  'K20': {value:"角型20号", long:324, short:229, weight:17},
+  'K3': {value:"角型３号", long:277, short:216, weight:14},
+  'T1': {value:"長型１号", long:332, short:142, weight:11},
+  'T2': {value:"長型２号", long:277, short:119, weight:8},
+  'T3': {value:"長型３号", long:235, short:120, weight:7},
+  'T4': {value:"長型４号", long:205, short:90, weight:5}
 }   
 
-// --- 郵便種別メッセージ
+// --- 郵便種別メッセージ（現在未使用）
 const postalClassMessage = [
   {id:'calculating', message:'計算中です・・・'},
   {id:'standard', message:'定形郵便物'},
@@ -50,7 +58,7 @@ const postalClassMessage = [
   {id:'parcel', message:'郵便小包での扱いとなります'},
 ]
 
-// ----- 各郵便種別ごとの料金表（重量ここまで,料金）
+// ----- 各郵便種別ごとの料金表（重量何ｇまで,料金）
 // --- 定形郵便物
 const standardPostageArray = [
   { weightLimit:25, fee:84 },

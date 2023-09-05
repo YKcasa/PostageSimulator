@@ -89,21 +89,22 @@
                     this.key = key;
                     this.label = label;
                     if (type == 'paper' || type == 'file'){
-                        this.basicWeight = weight / (788 * 1091); // 紙の重さを、 kg/四六判(788mm*1091mm)1000枚　→　g/1mm2　に変換する
+                        this.basicWeight = weight / (788 * 1091); // 紙の重さ単位：kg/四六判(788mm*1091mm)1000枚　→　g/1mm2　に変換する
                     }else{
                         this.basicWeight = weight;
                     }
-                    this.totalWeight = 0;
+                    this.unitWeight = 0;
                     this.basicThickness = thickness;
-                    this.foldingFactor = 1;
-                    this.totalThickness = 0;
+                    this.foldingFactor = 1; // 二つ折り・三つ折り換算用
+                    this.unitThickness = 0;
                     this.materialType = type;
                     this.longSide = 0;
                     this.shortSide = 0;
                     this.quantity = 0;
                     this.quantityMax = max; // ドロップダウンメニューの最大値
                     this.unitName = unitName;
-                    this.standardArray = new Array();
+                    // this.standardArray = new Array();
+                    this.sizeStandard = sizeStandards[this.materialType] || sizeStandards.default;
                     this.createElements(); // インスタンス作成時に画面要素を作成
                     this.attachListeners(); // 作成した画面要素にイベントリスナーを付与
                 }
@@ -119,30 +120,15 @@
                     label.textContent = this.label;
                     div.appendChild(label);
         
-                    // サイズ選択ドロップメニューを作成                    
+                    // サイズ選択ドロップメニューを作成
                     const sizeSelectMenu = document.createElement('select');
-                    sizeSelectMenu.id = this.key + '-size'; 
-                    const option = document.createElement('option');
-                    
-                    switch (this.materialType) {
-                        case 'paper': 
-                            this.standardArray = paperSizeStandard;
-                            break;
-                        case 'file':
-                            this.standardArray = fileSizeStandard;
-                            break;
-                        default:
-                            this.standardArray = othersSize;
-                            sizeSelectMenu.disabled = true;
-                    }
-                            
-                    for(const size in this.standardArray){ 
+                    sizeSelectMenu.id = this.key + '-size';                                         
+                    for (const size in this.sizeStandard) { 
                         const option = document.createElement('option');
                         option.value = size;
                         option.text = size;
                         sizeSelectMenu.appendChild(option);
                     }
-
                     div.appendChild(sizeSelectMenu);
 
                     // 数量選択ドロップメニューを表示
@@ -158,7 +144,7 @@
                     
                     // 二つor三つ折りラジオボタン（実装要検討）
 
-                    // 内容物のラベル
+                    // 単位のラベル
                     const unitLabel = document.createElement('label');
                     unitLabel.textContent = this.unitName;
                     div.appendChild(unitLabel);
@@ -186,42 +172,42 @@
                     
                     if (this.materialType == 'paper' || this.materialType == 'file'){
                         this.papersize = selectedPaperSize;
-                        this.longSide = this.standardArray[this.papersize].long;
-                        this.shortSide = this.standardArray[this.papersize].short;
-                        this.foldingFactor = this.standardArray[this.papersize].foldingFactor;
+                        this.longSide = this.sizeStandard[this.papersize].long;
+                        this.shortSide = this.sizeStandard[this.papersize].short;
+                        this.foldingFactor = this.sizeStandard[this.papersize].foldingFactor;
                     }else{
                         this.longSide = 1;
                         this.shortSide = 1;
                     }
 
                     this.quantity = quantity;
-                    this.totalWeight= Number(this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity);
-                    this.totalThickness = Number(this.basicThickness * this.foldingFactor * quantity);
-                    console.log(this.key, this.totalWeight, this.totalThickness)
+                    this.unitWeight= Number(this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity);
+                    this.unitThickness = Number(this.basicThickness * this.foldingFactor * quantity);
+                    console.log(this.key, this.unitWeight, this.unitThickness)
                     
-                    outerLong = componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), 0);
-                    outerShort = componentsInstances.reduce((max, instance) => Math.max(max, instance.shortSide), -Infinity);
-                    console.log(outerLong,outerShort);
-
-                    weightAndThickness();
+                    calculateDimentionsAndWeight();
                     generateEnvelopeButtons();
                 }
             }
             
-            function weightAndThickness() {
-                inclTotalWeight = componentsInstances.map(item => item.totalWeight).reduce((prev, curr) => prev + curr, 0);
-                displayWeight.textContent = `${inclTotalWeight.toFixed(2)} g`;
+            function calculateDimentionsAndWeight() {
+                outerLong = componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), 0);
+                outerShort = componentsInstances.reduce((max, instance) => Math.max(max, instance.shortSide), 0);
                 
-                inclTotalThicknes = componentsInstances.map(item => item.totalThickness).reduce((prev, curr) => prev + curr, 0);
+                inclTotalThicknes = componentsInstances.map(item => item.unitThickness).reduce((sum, curr) => sum + curr, 0);
                 displayThickness.textContent = `${inclTotalThicknes.toFixed(1)} mm`;
 
-                console.log(inclTotalThicknes,inclTotalWeight);
+                inclTotalWeight = componentsInstances.map(item => item.unitWeight).reduce((sum, curr) => sum + curr, 0);
+                displayWeight.textContent = `${inclTotalWeight.toFixed(2)} g`;
+                
+                console.log(`長辺:${outerLong}, 短辺:${outerShort}, 厚さ:${inclTotalThicknes}, 重さ:${inclTotalWeight}`);
+                
             }    
 
             function generateEnvelopeButtons() { // 内容物が入るサイズの封筒ボタンを表示、イベントリスナーを設置する
                 displaySize.textContent = '';
                 envelopeArea.innerHTML = ''; 
-
+                
                 Object.keys(envelopeData).forEach(envelopeId => {
                     const data = envelopeData[envelopeId];
                     if(data.long > outerLong && data.short > outerShort){
@@ -232,27 +218,46 @@
                         envelopeArea.appendChild(button);
                     }
                 });
-
+                
                 const envelopeButtons = document.querySelectorAll('.envelope-btn');
                 envelopeButtons.forEach(btns => btns.addEventListener('click', calculatePostage));
-
-            }
-
                 
+            }
+            
+            
             // 封筒ボタン選択時の処理
             function calculatePostage(){
                 loadEnvelopDatas();
                 postalClassify();
             }
-
+            
             function loadEnvelopDatas(){
+                displayContents(displayThickness,'','');
+                displayContents(displayWeight,'','');
+
                 const selectedEnvelopeSize = envelopeData[event.target.id];
                 console.log(selectedEnvelopeSize);
                 evlpLongSide = selectedEnvelopeSize.long;
                 evlpShortSide = selectedEnvelopeSize.short;
                 displaySize.textContent = `${evlpLongSide}mm × ${evlpShortSide}mm`;
+                
+                totalThickness = (inclTotalThicknes + selectedEnvelopeSize.weight).toFixed(1);
+                // displayThickness.textContent = `${totalThickness.toFixed(1)} mm`;
+                // setTimeout(displayContents(displayThickness, totalThickness, 1),1000);
+                setTimeout(displayContents, 300, displayThickness, totalThickness, 'mm');
+                
+                totalWeight = (inclTotalWeight + selectedEnvelopeSize.weight).toFixed(2);
+                // displayWeight.textContent = `${totalWeight.toFixed(2)} g`;
+                setTimeout(displayContents, 300, displayWeight, totalWeight, 'g') ;
+                
 
                 console.log(evlpLongSide,evlpShortSide);
+            }
+
+            function displayContents(where, what, unit){
+                const area = where;
+                // const contents = what;
+                area.textContent = `${what} ${unit}`;
             }
 
             
@@ -317,5 +322,6 @@
                 
 
         </script>
+        <!-- <script src="javascript.js"></script> -->
     </body>
 </html>
