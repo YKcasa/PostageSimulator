@@ -153,24 +153,49 @@
                     const paperSizeSelect = document.getElementById(this.key + '-size');
                     const quantitySelect = document.getElementById(this.key + '-quantity');
                     
-                    paperSizeSelect.addEventListener('change', this.updateInstance.bind(this));
-                    quantitySelect.addEventListener('change', this.updateInstance.bind(this));
+                    paperSizeSelect.addEventListener('change', this.applyUpdate.bind(this));
+                    quantitySelect.addEventListener('change', this.applyUpdate.bind(this));
                 }
 
-                updateInstance() { // ドロップダウンの選択内容で内容物インスタンスを更新する
+                applyUpdate(){
+                    const selectedSize = document.getElementById(this.key + '-size').value;
+                    const quantity = document.getElementById(this.key + '-quantity').value;
+                    
+                    if((selectedSize == 'サイズを選択' || selectedSize == 'サイズ指定なし') && quantity === 0){
+                        // 
+                        // 次へボタン無効化
+
+                    }else{
+                        // 封筒リセット
+                        // 次へボタン無効化
+                        if (){//サイズ無選択
+                            // サイズ欄を赤くする
+                        }
+                        if (){//数量無選択
+                            // 数量欄を赤くする
+                        }
+                        this.updateInstance.bind(this);
+                        
+                    }
+
                     updateDisplay(displayPostage, '');
                     updateDisplay(displayMailType, '');
                     updateDisplay(displayWeightLimit, '');
+    
 
-                    const selectedPaperSize = document.getElementById(this.key + '-size').value;
-                    const quantity = document.getElementById(this.key + '-quantity').value;
+                }
+
+
+
+
+                updateInstance() { // ドロップダウンの選択内容で内容物インスタンスを更新する
                             
-                    this.longSide = this.sizeStandard[selectedPaperSize].long;
-                    this.shortSide = this.sizeStandard[selectedPaperSize].short;
-                    this.foldingFactor = this.sizeStandard[selectedPaperSize].foldingFactor;
+                    this.longSide = this.sizeStandard[selectedSize].long;
+                    this.shortSide = this.sizeStandard[selectedSize].short;
+                    this.foldingFactor = this.sizeStandard[selectedSize].foldingFactor;
 
                     this.quantity = Number(quantity);
-                    this.unitWeight= Number(this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity);
+                    this.unitWeight = Number(this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity);
                     this.unitThickness = Number(this.basicThickness * this.foldingFactor * quantity);
 
                     console.log(this.key, this.quantity, this.unitWeight, this.unitThickness)
@@ -226,7 +251,6 @@
                 updateDisplay(displayWeight,'');
 
                 const selectedEnvelopeSize = envelopeData[event.target.id];
-                // console.log(selectedEnvelopeSize);
                 evlpLongSide = selectedEnvelopeSize.long;
                 evlpShortSide = selectedEnvelopeSize.short;
                 updateDisplay(displaySize, `${evlpLongSide} mm × ${evlpShortSide} mm`, 500);
@@ -237,8 +261,7 @@
                 totalWeight = inclTotalWeight + selectedEnvelopeSize.weight;
                 updateDisplay(displayWeight, `${totalWeight.toFixed(2)} g`, 500);
                 
-
-                console.log(evlpLongSide,evlpShortSide);
+                console.log(`封筒長辺：${evlpLongSide},封筒短辺：${evlpShortSide},厚さ：${totalThickness},重さ：${totalWeight}`);
             }
 
             

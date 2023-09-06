@@ -10,7 +10,8 @@ const inclusions = [
 
 // --- サイズ一覧
 const paperSizeStandard = {
-  'サイズを選択': {long:0, short:0, foldingFactor:1},
+  // 'サイズを選択': {long:0, short:0, foldingFactor:1},
+  'サイズを選択': {long:1, short:1, foldingFactor:1},
   'A4': {long:297, short:210, foldingFactor:1},
   'A4（２つ折り）': {long:210, short:148.5, foldingFactor:2},
   'A4（３つ折り）': {long:210, short:99, foldingFactor:3},
@@ -20,7 +21,8 @@ const paperSizeStandard = {
 }    
 
 const fileSizeStandard = {
-  'サイズを選択': {long:0, short:0, foldingFactor:1},
+  // 'サイズを選択': {long:0, short:0, foldingFactor:1},
+  'サイズを選択': {long:1, short:1, foldingFactor:1},
   'A4': {long:310, short:220, foldingFactor:1},
   'B4': {long:364, short:257, foldingFactor:1}
 }    
