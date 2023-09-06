@@ -26,7 +26,7 @@ const fileSizeStandard = {
 }    
 
 const othersSize = {
-  'サイズ指定なし': {long:0, short:0, foldingFactor:1}
+  'サイズ指定なし': {long:1, short:1, foldingFactor:1}
 }    
 
 // --- 内容物のtypeと読み込むサイズ一覧の対応表
@@ -39,14 +39,14 @@ const sizeStandards = {
 
 // --- 封筒ボタンのデータセット　注：重さは白色ケント紙85kgを想定
 const envelopeData = {
-  'K1': {value:"角型１号", long:382, short:270, weight:23},
-  'K2': {value:"角型２号", long:332, short:240, weight:18},
-  'K20': {value:"角型20号", long:324, short:229, weight:17},
-  'K3': {value:"角型３号", long:277, short:216, weight:14},
-  'T1': {value:"長型１号", long:332, short:142, weight:11},
-  'T2': {value:"長型２号", long:277, short:119, weight:8},
-  'T3': {value:"長型３号", long:235, short:120, weight:7},
-  'T4': {value:"長型４号", long:205, short:90, weight:5}
+  'K1': {value:"角型１号", long:382, short:270, thickness:1, weight:23},
+  'K2': {value:"角型２号", long:332, short:240, thickness:1, weight:18},
+  'K20': {value:"角型20号", long:324, short:229, thickness:1, weight:17},
+  'K3': {value:"角型３号", long:277, short:216, thickness:1, weight:14},
+  'T1': {value:"長型１号", long:332, short:142, thickness:1, weight:11},
+  'T2': {value:"長型２号", long:277, short:119, thickness:1, weight:8},
+  'T3': {value:"長型３号", long:235, short:120, thickness:1, weight:7},
+  'T4': {value:"長型４号", long:205, short:90, thickness:1, weight:5}
 }   
 
 // --- 郵便種別メッセージ（現在未使用）
