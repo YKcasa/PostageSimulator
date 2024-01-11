@@ -163,54 +163,46 @@
                 }
 
                 updateInclusion(){ // ドロップダウンの選択内容で内容物のインスタンスを更新する
-                    updateDisplay(displayPostage, '');
-                    updateDisplay(displayMailType, '');
-                    updateDisplay(displayWeightLimit, '');
-
-                    // const paperSizeSelect = document.getElementById(this.key + '-size');
-                    // const quantitySelect = document.getElementById(this.key + '-quantity');
-                    // quantitySelect.classList.remove('select-emphasis');
-                    // paperSizeSelect.classList.remove('select-emphasis');
-                    envelopeArea.innerHTML = '';
-                    this.quantitySelect.classList.remove('select-emphasis');
-                    this.paperSizeSelect.classList.remove('select-emphasis');
+                    this.clearDisplay();
 
                     // const selectedSize = document.getElementById(this.key + '-size').value;
                     const selectedSize = this.paperSizeSelect.value;
                     // const quantity = document.getElementById(this.key + '-quantity').value;
                     const quantity = this.quantitySelect.value;
 
-                    if (selectedSize === 'サイズを選択' && quantity === '0'){
-                        this.quantitySelect.classList.remove('select-emphasis');
-                        this.paperSizeSelect.classList.remove('select-emphasis');
-                    
-                    }else if (selectedSize === 'サイズを選択'){
-                        this.paperSizeSelect.classList.add('select-emphasis');
-                    
+                    if (selectedSize === 'サイズを選択'){
+                        if (quantity !== '0'){
+                            this.paperSizeSelect.classList.add('select-emphasis');
+                        }
                     }else if (quantity === '0'){
-                        this.quantitySelect.classList.add('select-emphasis');
-
-                        calculateInclusionTotal();
-                        generateEnvelopeButtons();
-
-                    }else{
-
-                        this.longSide = this.sizeStandard[selectedSize].long;
-                        this.shortSide = this.sizeStandard[selectedSize].short;
-                        this.foldingFactor = this.sizeStandard[selectedSize].foldingFactor;
-        
-                        this.quantity = Number(quantity);
-                        this.unitWeight = Number(this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity);
-                        this.unitThickness = Number(this.basicThickness * this.foldingFactor * quantity);
-        
-                        console.log(this.key, this.quantity, this.unitWeight, this.unitThickness)
-                        
-                        calculateInclusionTotal();
-                        generateEnvelopeButtons();
-
+                        if (selectedSize !== 'サイズ指定なし'){
+                            this.quantitySelect.classList.add('select-emphasis');
+                        }
                     }
+
+                    this.longSide = this.sizeStandard[selectedSize].long;
+                    this.shortSide = this.sizeStandard[selectedSize].short;
+                    this.foldingFactor = this.sizeStandard[selectedSize].foldingFactor;
+    
+                    this.quantity = Number(quantity);
+                    this.unitWeight = Number(this.basicWeight * this.longSide * this.shortSide * this.foldingFactor * this.quantity);
+                    this.unitThickness = Number(this.basicThickness * this.foldingFactor * quantity);
+    
+                    console.log(this.key, this.quantity, this.unitWeight, this.unitThickness)
+                    
+                    calculateInclusionTotal();
+                    generateEnvelopeButtons();
+
                 }
-                
+
+                clearDisplay(){ // 表示部分のクリア
+                    updateDisplay(displayPostage, '');
+                    updateDisplay(displayMailType, '');
+                    updateDisplay(displayWeightLimit, '');
+                    envelopeArea.innerHTML = '';
+                    this.quantitySelect.classList.remove('select-emphasis');
+                    this.paperSizeSelect.classList.remove('select-emphasis');
+                }
             }
 
             // --- 内容物の合算 --- 内容物の最大の長辺・短辺、内容物全体の厚さ・重さを計算
