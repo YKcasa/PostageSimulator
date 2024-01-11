@@ -105,7 +105,11 @@
                     this.quantityMax = max; // ドロップダウンメニューの最大値
                     this.unitName = unitName;
                     this.sizeStandard = sizeStandards[this.materialType] || sizeStandards.default;
+
                     this.createElements(); // インスタンス作成時に画面要素を作成
+                    this.paperSizeSelect = document.getElementById(this.key + '-size');
+                    this.quantitySelect = document.getElementById(this.key + '-quantity');
+
                     this.attachListeners(); // 作成した画面要素にイベントリスナーを付与
                 }
 
@@ -146,29 +150,50 @@
                     const unitLabel = document.createElement('label');
                     unitLabel.textContent = this.unitName;
                     div.appendChild(unitLabel);
-
                 }
                 
                 attachListeners() {
-                    const paperSizeSelect = document.getElementById(this.key + '-size');
-                    const quantitySelect = document.getElementById(this.key + '-quantity');
+                    // const paperSizeSelect = document.getElementById(this.key + '-size');
+                    // const quantitySelect = document.getElementById(this.key + '-quantity');
                     
-                    paperSizeSelect.addEventListener('change', this.updateInstance.bind(this));
-                    quantitySelect.addEventListener('change', this.updateInstance.bind(this));
+                    // paperSizeSelect.addEventListener('change', this.updateInclusion.bind(this));
+                    // quantitySelect.addEventListener('change', this.updateInclusion.bind(this));
+                    this.paperSizeSelect.addEventListener('change', this.updateInclusion.bind(this));
+                    this.quantitySelect.addEventListener('change', this.updateInclusion.bind(this));
                 }
 
-                updateInstance(){ // ドロップダウンの選択内容で内容物インスタンスを更新する
+                updateInclusion(){ // ドロップダウンの選択内容で内容物のインスタンスを更新する
                     updateDisplay(displayPostage, '');
                     updateDisplay(displayMailType, '');
                     updateDisplay(displayWeightLimit, '');
 
-                    const paperSizeSelect = document.getElementById(this.key + '-size');
-                    const quantitySelect = document.getElementById(this.key + '-quantity');
+                    // const paperSizeSelect = document.getElementById(this.key + '-size');
+                    // const quantitySelect = document.getElementById(this.key + '-quantity');
+                    // quantitySelect.classList.remove('select-emphasis');
+                    // paperSizeSelect.classList.remove('select-emphasis');
+                    envelopeArea.innerHTML = '';
+                    this.quantitySelect.classList.remove('select-emphasis');
+                    this.paperSizeSelect.classList.remove('select-emphasis');
 
-                    const selectedSize = document.getElementById(this.key + '-size').value;
-                    const quantity = document.getElementById(this.key + '-quantity').value;
+                    // const selectedSize = document.getElementById(this.key + '-size').value;
+                    const selectedSize = this.paperSizeSelect.value;
+                    // const quantity = document.getElementById(this.key + '-quantity').value;
+                    const quantity = this.quantitySelect.value;
 
-                    if (selectedSize !== 'サイズを選択' && quantity !== 0){
+                    if (selectedSize === 'サイズを選択' && quantity === '0'){
+                        this.quantitySelect.classList.remove('select-emphasis');
+                        this.paperSizeSelect.classList.remove('select-emphasis');
+                    
+                    }else if (selectedSize === 'サイズを選択'){
+                        this.paperSizeSelect.classList.add('select-emphasis');
+                    
+                    }else if (quantity === '0'){
+                        this.quantitySelect.classList.add('select-emphasis');
+
+                        calculateInclusionTotal();
+                        generateEnvelopeButtons();
+
+                    }else{
 
                         this.longSide = this.sizeStandard[selectedSize].long;
                         this.shortSide = this.sizeStandard[selectedSize].short;
@@ -180,25 +205,16 @@
         
                         console.log(this.key, this.quantity, this.unitWeight, this.unitThickness)
                         
-                        calculateDimentionsAndWeight();
+                        calculateInclusionTotal();
                         generateEnvelopeButtons();
 
-                    }else{
-                        envelopeArea.innerHTML = '';
-
-                        if (selectedSize == 'サイズを選択'){
-                            paperSizeSelect.classList.add('select-emphasis')
-                        }
-
-                        if (quantity == 0){
-                            quantitySelect.classList.add('select-emphasis')
-                        }                        
                     }
                 }
+                
             }
 
             // --- 内容物の合算 --- 内容物の最大の長辺・短辺、内容物全体の厚さ・重さを計算
-            function calculateDimentionsAndWeight() {
+            function calculateInclusionTotal() {
                 inclMaxLong = componentsInstances.reduce((max, instance) => Math.max(max, instance.longSide), 0);
                 inclMaxShort = componentsInstances.reduce((max, instance) => Math.max(max, instance.shortSide), 0);
                 
