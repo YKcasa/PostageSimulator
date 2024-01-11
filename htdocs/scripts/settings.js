@@ -61,6 +61,7 @@ const postalClassMessage = [
 ]
 
 // ----- 各郵便種別ごとの料金表（重量何ｇまで,料金）
+// --- !!! 郵便料金が変更となった場合はここを修正 !!! ---
 // --- 定形郵便物
 const standardPostageArray = [
   { weightLimit:25, fee:84 },

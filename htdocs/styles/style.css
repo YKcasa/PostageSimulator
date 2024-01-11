@@ -113,7 +113,7 @@ header h3 {
 
 .select-emphasis {
     border: 1px solid var(--emphasis);
-    color: var(--emphasis);
+    background-color: var(--emphasis);
 }
 
 .inclusion {
