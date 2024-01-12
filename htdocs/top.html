@@ -12,11 +12,15 @@
         </header>
         <div class="container">
             <p>ver.8.7</p>
-            <p>送りたいものと封筒のサイズから<br>郵便料金の目安を算出します</p>
+            <p>送りたいものと封筒のサイズから 郵便料金の目安を算出します</p>
             <div class="menu-box">
                 <div class="input-area">
-                    <!-- <h4>STEP 1</h4> -->
-                    <h2>送りたいものを選んでください<span>（複数可）</span></h2>
+                    <!-- <span>STEP 1</span> -->
+                    <h2>
+                        <span class="outline">STEP 1</span>
+                        送りたいものを選んでください
+                        <span class="annotation">(複数可)</span>
+                    </h2>
                     <div id="inclusion"></div>
                 </div>
                 <!-- <button class="accordion-btn">ダミー：アコーディオンメニューの練習</button>
@@ -26,7 +30,10 @@
                 </div> -->
                 <div class="input-area" id="envelope">
                     <!-- <h4>STEP2</h4> -->
-                    <h2>封筒のサイズは？</h2>
+                    <h2>
+                        <span class="outline">STEP 2</span>
+                        封筒のサイズは？
+                    </h2>
                     <div id="envelope-select"></div>
                 </div>
             </div>
@@ -40,7 +47,6 @@
                     </div>
                     <div class="result-2">
                         <div id="display-mailtype"></div>
-                        <p> --- </p>
                         <div id="display-weight-limit"></div>
                     </div>
                 </div>

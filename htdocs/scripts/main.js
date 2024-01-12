@@ -232,7 +232,7 @@ function postalClassify() {
     };
 
     updateDisplay(displayMailType, mailType, 500);
-    updateDisplay(displayWeightLimit, `あと${(nextWeightLimit - totalWeight).toFixed(1)}ｇまで同一料金です`, 500);
+    updateDisplay(displayWeightLimit, `あと ${(nextWeightLimit - totalWeight).toFixed(1)}ｇまで同一料金です`, 500);
     displayPostage.textContent = `${displayFee} 円`;
     
 }
