@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ポートフォリオのトップページ</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h2>ポートフォリオ</h2>
+            </header>
+            <div class="main-wrapper">
+                <div class="self-introduction containts">
+                    <p>
+                        （ここに自己紹介を書きます）<br>
+                        Qiitaアカウントは <a href="https://qiita.com/yKashiya" target="_blank">こちら</a><br>
+                        ※ 記事はこれから記載・公開予定です。
+                    </p>
+                </div>
+                <div class="productions containts">
+                    <div class="production">
+                        <div class="thumbnail">
+                            <a href="PostageSimulation/top.html" target="_blank">
+                                <img src="images/ps_thumbnail.png" alt="郵便料金シミュレーション">
+                            </a>
+                        </div>
+                        <div class="description">
+                            <h3><a href="PostageSimulation/top.html" target="_blank">郵便料金シミュレーション</a></h3>
+                            <div class="lang-and-env paragraphs">
+                                <h4>使用言語・環境</h4>
+                                <ul>
+                                    <li>JavaScript, HTML/CSS</li>
+                                </ul>
+                            </div>
+                            <div class="explanations paragraphs">
+                                <h4>説明・工夫した点</h4>
+                                <p>
+                                    封入したい物と数をプルダウンメニューより選択すると、サイズの合う封筒の候補のボタンが表示されます。<br>
+                                    ボタンを押すと、郵便料金の目安が表示されます。<br>
+                                    <br>
+                                    メンテナンス性のため、封入したいアイテムについては別のjsファイルで配列で設定しています。<br>
+                                    ページ読み込み時に配列を読み込み、動的に画面要素を作成します。<br>
+                                    ※ 計算される料金（紙の重さ）は検証中です。<br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="production">
+                        <div class="thumbnail">
+                            <a href="https://hachioji147-bbs-778bb39bcfba.herokuapp.com/" target="_blank">
+                                <img src="images/bbs_thumbnail.png" alt="簡易掲示板">
+                            </a>
+                        </div>
+                        <div class="description">
+                            <h3><a href="https://hachioji147-bbs-778bb39bcfba.herokuapp.com/" target="_blank">簡易掲示板</a></h3>
+                            <div class="lang-and-env paragraphs">
+                                <h4>使用言語・環境</h4>
+                                <ul>
+                                    <li>Python(Django)</li>
+                                    <li>herokuへのデプロイ</li>
+                                    <li>画像ファイルの保存先としてAWS S3を使用</li>
+                                </ul>
+                            </div>
+                            <div class="explanations paragraphs">
+                                <h4>説明・工夫した点</h4>
+                                <p>
+                                    Djangoフレームワークを使用した簡単な掲示板です。<br>
+                                    投稿機能・編集機能・削除（不可視フラグ）の機能を備えています。<br>
+                                    Webhookにより、新しい投稿時にslackへの通知が可能です。<br>
+                                    投稿に画像添付が可能で、画像はAWSのS3バケット上に保存するようにしました。<br>
+                                    <br>
+                                    デザイン面としては、Djangoのライブラリで時刻を取得し、時間帯によって背景の色を変更しています。<br>
+                                    またWebhookなどの情報をコードに書かないよう、herokuの環境変数を使用しています。<br>
+                                    ※ ユーザー作成・管理機能は検討中です。<br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <p>(c) 2024 Yuuki Kajiyama</p>
+            </footer>
+        </div>
+    </body>
+</html>
