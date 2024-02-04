@@ -8,6 +8,7 @@
     vertical-align: center;
     font-family: "Meiryo UI", "MSゴシック", sans-serif;
     letter-spacing: 0.05em;
+    -webkit-appearance: none; 
 }
 
 :root{
@@ -23,6 +24,7 @@
     --gray: #778877;
     --lightgray: #c9edc9;
     --white: #ffffff;
+    --white-rgb: 255,255,255;
     /* サイズの指定 */
     --box-width: 400px;
 }
@@ -60,7 +62,7 @@ header h3 {
 .menu-box {
     width: 90%;
     max-width: var(--box-width);
-    margin: 50px auto;
+    margin: 0 auto;
 }
 
 .input-area {
@@ -74,7 +76,6 @@ header h3 {
     color: var(--black);
     font-weight: 200;
     font-size: 20px;
-    /* letter-spacing: 0.3em; */
 }
 
 .outline {
@@ -94,6 +95,15 @@ header h3 {
 }
 
 @media screen and (max-width:420px) {
+    .input-area {
+        margin: 30px 0px;
+    }
+
+    .input-area h2 {
+        font-size: 18px;
+        letter-spacing: 0.03em;
+    }
+
     .outline {
         display: block;
         margin: 2px auto;
@@ -125,9 +135,11 @@ header h3 {
 }
 
 .inclusion select {
+    -webkit-appearance: menulist;
     visibility: visible;
     margin: 0px 8px;
     padding: 1px 0px;
+    border-radius: 7px;
     color: var(--main-font-dark);
     font-size: 16px;
 }
@@ -140,8 +152,13 @@ header h3 {
 
 @media screen and (max-width:420px){
     .inclusion {
-        line-height: 30px;
-        font-size: 15px;
+        line-height: 28px;
+        font-size: 14px;
+    }
+
+    .inclusion select {
+        margin: 0px 4px 0px 0px;
+        font-size: 14px;
     }
 }
 
@@ -152,7 +169,7 @@ header h3 {
     margin: 5px;
     border-radius: 10px;
     /* border: 2px solid var(--main-color); */
-    border: 2px solid rgba(var(--main-font-dark-rgb),0.6);
+    border: 2px solid rgba(var(--main-font-dark-rgb),0.7);
     /* background-color: rgba(var(--main-color-rgb),0.1); */
     background-color: var(--white);
     color: var(--main-font-dark);
@@ -167,8 +184,8 @@ header h3 {
 }
 
 .envelope-btn:focus {
-    background-color: rgba(var(--main-font-dark-rgb),0.7);
-    border: 2px solid rgba(var(--main-font-dark-rgb),0.7);
+    background-color: rgba(var(--main-font-dark-rgb),0.8);
+    border: 2px solid rgba(var(--main-font-dark-rgb),0.3);
 
     color: var(--white);
     transition: 0.5s;
@@ -181,7 +198,7 @@ header h3 {
 /* シミュレーションエリア全体 */
 .simulation-area {
     width: 100%;
-    height: 235px;
+    /* height: 235px; */
     padding: 20px 0px;
     background-color: rgba(var(--main-color-rgb),0.2);
     position: fixed;
@@ -194,13 +211,13 @@ header h3 {
     max-width: var(--box-width);
     margin: 0 auto;
     border-radius: 7px;
-    /* background-color: var(--main-font-light); */
-    background-color: white;
+    background-color: rgba(var(--white-rgb),0.95);
+    /* background-color: white; */
 }
 
 @media screen and (max-width:420px){
     .simulation-area {
-        height: 200px;
+        /* height: 200px; */
         padding: 10px 0px;
     }
 }
@@ -230,7 +247,6 @@ header h3 {
 }
 
 #display-postage {
-    /* width: 45%; */
     min-width: 100px;
     text-align: center;
     font-size: 28px;
@@ -238,7 +254,6 @@ header h3 {
 }
 
 .result-2 {
-    /* display: flex; */
     justify-content: center;
     line-height: 20px;
     font-size: 12px;
@@ -248,13 +263,17 @@ header h3 {
     .simu-upper {
         padding: 0px 10px;
     }
+
+    .result-1 p {
+        font-size: 19px;
+    }
 }
 
 /* 情報表示エリア */
 .simu-downer {
     display: flex;
     justify-content: center;
-    margin: 10px;
+    margin: 10px 10px 0px 10px;
     border-top: 1px dotted var(--gray);
 }
 
@@ -265,6 +284,7 @@ header h3 {
     padding: 0px 5px;
     text-align: center;
     font-size: 14px;
+    line-height: 16px;
     color: var(--gray);
 }
 
@@ -277,6 +297,16 @@ header h3 {
 @media screen and (max-width:420px){
     .simu-display {
         height: 60px;
+        padding: 0px 0px;
+        font-size: 13px;
+    }
+
+    .simu-display p {
+        font-size: 13px;
+    }
+
+    .simu-display span {
+        font-size: 11px;
     }
 }
 
