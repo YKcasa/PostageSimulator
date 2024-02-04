@@ -57,15 +57,21 @@ class Inclusion {
 
         // サイズ選択ドロップダウンメニュー
         const sizeSelectMenu = document.createElement('select');
-        sizeSelectMenu.id = this.key + '-size';                                         
+        sizeSelectMenu.id = this.key + '-size';       
+        
         for (const size in this.sizeStandard) { 
             const option = document.createElement('option');
             option.value = size;
             option.text = size;
             sizeSelectMenu.appendChild(option);
         }
+
         div.appendChild(sizeSelectMenu);
         this.paperSizeSelect = document.getElementById(sizeSelectMenu.id);
+
+        if (this.materialType == 'others'){
+            this.paperSizeSelect.disabled = true;
+        }
         
         // 数量選択ドロップダウンメニュー
         const quantityInputMenu = document.createElement('select');
@@ -107,8 +113,7 @@ class Inclusion {
         console.log(this.key, this.quantity, this.unitWeight, this.unitThickness)
         
         calculateInclusionTotal();
-        generateEnvelopeButtons();
-
+        
         if (selectedSize === 'サイズを選択'){
             if (quantity !== '0'){
                 this.paperSizeSelect.classList.add('select-emphasis');
@@ -119,6 +124,8 @@ class Inclusion {
                 this.quantitySelect.classList.add('select-emphasis');
                 envelopeArea.innerHTML = '';
             }
+        }else{
+            generateEnvelopeButtons();
         }
     }
 
@@ -143,7 +150,6 @@ function calculateInclusionTotal() {
     updateDisplay(displayWeight, `${inclTotalWeight.toFixed(2)} g`, 500);
     
     console.log(`長辺:${inclMaxLong}, 短辺:${inclMaxShort}, 厚さ:${inclTotalThicknes}, 重さ:${inclTotalWeight}`);  
-
 }    
 
 
@@ -166,8 +172,13 @@ function generateEnvelopeButtons() {
     const envelopeButtons = document.querySelectorAll('.envelope-btn');
     envelopeButtons.forEach(btns => btns.addEventListener('click', calculatePostage));
     
+    scrollToButtons();
 }
 
+function scrollToButtons(){
+    const scrollTarget = document.getElementById('inclusion');
+    scrollTarget.scrollIntoView({behavior: 'smooth', block: 'start'})
+}
 
 // --- 封筒ボタン選択時　-> 封筒サイズ読み込み、郵便種別判定
 function calculatePostage(){
