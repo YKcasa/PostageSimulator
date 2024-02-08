@@ -1,0 +1,299 @@
+/* リセット */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-decoration: none;
+    vertical-align: center;
+    font-family: "Meiryo UI", "MSゴシック", sans-serif;
+    letter-spacing: 0.15em;
+    -webkit-appearance: none; 
+}
+
+:root{
+    /* 色の指定 */
+    --main-color: #CECE5A;
+    --main-color-rgb: 206,206,90;
+    --main-font-dark: #224422;
+    --main-font-dark-rgb: 34,68,34;
+    --main-font-light: #f5f2ef;
+    --emphasis: #FD8D14;
+    --emphasis-rgb: 253,141,20;
+    --black: #003300;
+    --gray: #778877;
+    --lightgray: #c9edc9;
+    --white: #ffffff;
+    --white-rgb: 255,255,255;
+    /* サイズの指定 */
+    --box-width: 400px;
+}
+
+
+/* ヘッダー */
+header {
+    text-align: left;
+    background-color: var(--main-color);
+}
+
+header h3 {
+    font-weight: 600;
+    line-height: 20px;
+    font-size: 24px;
+    letter-spacing: 0.1em;
+    color: var(--main-font-light);
+}
+
+
+/* 本文部分 */
+.container {
+    /* width: 90%; */
+    height: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: rgba(var(--main-color-rgb),0.1);
+}
+
+.container p {
+    font-size: 11px;
+    color: var(--gray);
+}
+
+.menu-box {
+    width: 90%;
+    max-width: var(--box-width);
+    margin: 0 auto;
+}
+
+.input-area {
+    margin: 50px 0px;
+}
+
+.input-area h2 {
+    margin-bottom: 14px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(var(--main-color-rgb),0.7);
+    color: var(--black);
+    font-weight: 200;
+    font-size: 20px;
+}
+
+.outline {
+    width: 64px;
+    padding: 2px 7px;
+    border-radius: 9px;
+    background-color: rgba(var(--emphasis-rgb),0.8);
+    color: var(--white);
+    font-size: 10px;
+    vertical-align: middle;
+    line-height: 20px;
+}
+
+.annotation {
+    font-size: 12px;
+}
+
+@media screen and (max-width:480px) {
+    .outline {
+        display: block;
+        margin: 2px auto;
+        line-height: 15px;
+    }
+}
+
+@media screen and (max-width:420px) {
+    .input-area {
+        margin: 30px 0px;
+    }
+
+    .input-area h2 {
+        font-size: 18px;
+        letter-spacing: 0.03em;
+    }
+}
+
+
+/* 動的コンポーネント関連 */
+/* 内容物選択部分 */
+
+.inclusion {
+    margin: 6px;
+    line-height: 32px;
+    color: var(--black);
+    font-size: 16px;
+}
+
+.inclusion select {
+    -webkit-appearance: menulist;
+    visibility: visible;
+    margin: 0px 8px;
+    padding: 1px 0px;
+    border-radius: 7px;
+    color: var(--main-font-dark);
+    font-size: 16px;
+}
+
+.select-emphasis {
+    border: 2px dashed var(--emphasis);
+    background-color: rgba(var(--emphasis-rgb),0.1);
+}
+
+@media screen and (max-width:420px){
+    .inclusion {
+        line-height: 28px;
+        font-size: 14px;
+    }
+
+    .inclusion select {
+        margin: 0px 4px 0px 0px;
+        font-size: 14px;
+    }
+}
+
+/* 封筒選択部分 */
+.envelope-btn {
+    height: 40px;
+    width: 90px;
+    margin: 5px;
+    border-radius: 10px;
+    border: 2px solid rgba(var(--main-font-dark-rgb),0.7);
+    background-color: var(--white);
+    color: var(--main-font-dark);
+    font-size: 16px;
+}
+
+.envelope-btn:hover {
+    background-color: var(--emphasis);
+    border: 2px solid rgba(var(--emphasis),0.3);
+    color: var(--main-font-light);
+    transition: 0.5s;   
+}
+
+.envelope-btn:focus {
+    background-color: rgba(var(--main-font-dark-rgb),0.8);
+    border: 2px solid rgba(var(--main-font-dark-rgb),0.3);
+
+    color: var(--white);
+    transition: 0.5s;
+}
+
+.button-area {
+    display: flex;
+}
+
+/* シミュレーションエリア全体 */
+.simulation-area {
+    width: 100%;
+    padding: 20px 0px;
+    background-color: rgba(var(--main-color-rgb),0.2);
+    position: fixed;
+    bottom: 0;
+    z-index: 10;
+}
+
+.simu-container {
+    width: 90%;
+    max-width: var(--box-width);
+    margin: 0 auto;
+    border-radius: 7px;
+    background-color: rgba(var(--white-rgb),0.95);
+}
+
+@media screen and (max-width:420px){
+    .simulation-area {
+        padding: 10px 0px;
+    }
+}
+
+/* 結果表示エリア */
+.simu-upper {
+    height: auto;
+    padding: 10px 20px 0px 20px;
+    text-align: center;
+}
+
+.result-1 {
+    display: flex;
+    justify-content: center;
+    line-height: 50px;
+}
+
+.result-1 p {
+    font-size: 20px;
+    text-align: right;
+}
+
+.result-1 span {
+    font-size: -2;
+}
+
+#display-postage {
+    min-width: 100px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 400;
+}
+
+.result-2 {
+    justify-content: center;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+@media screen and (max-width:420px){
+    .simu-upper {
+        padding: 0px 10px;
+    }
+
+    .result-1 p {
+        font-size: 19px;
+    }
+}
+
+/* 情報表示エリア */
+.simu-downer {
+    display: flex;
+    justify-content: center;
+    margin: 10px 10px 0px 10px;
+    border-top: 1px dotted var(--gray);
+}
+
+.simu-display {
+    width: 30%;
+    height: 70px;
+    margin: 7px;
+    padding: 0px 5px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 16px;
+    color: var(--gray);
+}
+
+.simu-display p {
+    margin-bottom: 3px;
+    font-size: 14px;
+    color: var(--gray)
+}
+
+@media screen and (max-width:420px){
+    .simu-display {
+        height: 60px;
+        padding: 0px 0px;
+        font-size: 13px;
+    }
+
+    .simu-display p {
+        font-size: 13px;
+    }
+
+    .simu-display span {
+        font-size: 11px;
+    }
+}
+
+/* フッター */
+footer p{
+    text-align: center;
+    color: var(--gray);
+    font-size: 12px;
+}
