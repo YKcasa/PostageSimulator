@@ -264,31 +264,8 @@ function updateDisplay(area, contents, delay = 0){
     area.textContent = `${contents}`;
 }
 
-function turnPostageCounter(previousValue = 0, targetValue){
-
-    // let displayValue = previousValue;
-
-    // const turnCounter = () => {
-    //     displayPostage.textContent = displayValue;
-    //     displayValue++
-
-    //     if ( > ){
-
-    //     }
-    // }
-
-    // if (previousValue <= targetValue){
-    //     const difference = targetValue - previousValue;
-    //     const speed = 600 / difference;
-    //     clearInterval(counterData);
-    //     counterData = setInterval(turnCounter, speed);
-    // }else{
-    //     const difference = previousValue - targetValue;
-    //     const speed = 600 / difference;
-    //     clearInterval(counterData);
-    //     counterData = setInterval(turnCounter, speed);
-
-    // }
+// --- 郵便料金の値が変更するとき、カウントアップ・カウントダウン表示する（作成中）
+function turnPostageCounter(){
 }
 
 
