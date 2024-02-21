@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>郵便料金シミュレーション ver0.80</title>
+        <link rel="stylesheet" href="styles/style.css">
+    </head>
+    <body>
+        <header>
+            <h3>かんたん<br>郵便料金<br>シミュレーター</h3>
+        </header>
+        <div class="container">
+            <p>送りたいものと封筒のサイズから 郵便料金の目安を算出します</p>
+            <p>ver.0.8.7</p>
+            <div class="menu-box">
+                <div class="input-area">
+                    <h2>
+                        <span class="outline">STEP 1</span>
+                        送りたいものを選んでください
+                        <span class="annotation">(複数可)</span>
+                    </h2>
+                    <div id="inclusion"></div>
+                </div>
+                <!-- <button class="accordion-btn">ダミー：アコーディオンメニューの練習</button>
+                <div class="accordion-panel">
+                    <p>サイズ直接入力機能は作成中です・・・</p>
+                    <input type="text" value="エラー処理めんどうだなあ"/>
+                </div> -->
+                <div class="input-area" id="envelope">
+                    <h2>
+                        <span class="outline">STEP 2</span>
+                        封筒のサイズは？
+                    </h2>
+                    <div id="envelope-select"></div>
+                </div>
+            </div>
+        </div>
+        <div class="simulation-area">
+            <div class="simu-container">
+                <div class="simu-upper">
+                    <div class="result-1">
+                        <p>郵便料金<span>（目安）</span>　</p>
+                        <div id="display-postage"></div>
+                    </div>
+                    <div class="result-2">
+                        <div id="display-mailtype"></div>
+                        <div id="display-weight-limit"></div>
+                    </div>
+                </div>
+                <div class="simu-downer">
+                    <div class="simu-display">
+                        <p>サイズ</p>
+                        <div id="display-size-area"></div>
+                    </div>
+                    <div class="simu-display">
+                        <p>厚み<span>（目安）</span></p>
+                        <div id="display-thickness-area"></div>
+                    </div>
+                    <div class="simu-display">
+                        <p>重さ<span>（目安）</span></p>
+                        <div id="display-weight-area"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <p>ここにフッター</p>
+        </footer>
+        <script src="scripts/settings.js"></script>
+        <script src="scripts/main.js"></script>
+    </body>
+</html>

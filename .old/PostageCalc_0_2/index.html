@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>郵便料金確認β版そのいち</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <h2 class="header-title">郵便料金確認（β版そのに）</h2>
+        </header>
+        <div class="main-wrapper">
+            <div class="annotation">
+                <p>※手紙のみ（はがき・小包・レターパックは今後対応予定）</p>
+            </div>
+            <div class="container">
+                <div class="input-title">
+                    <h2>あなたの送りたい郵便は…</h2>
+                </div>
+                <div class="input-area">
+                    <h3>封筒の大きさを教えてください（入力：半角数字 単位：ｍｍ）</h3>
+                    <div class="input-area1">
+                        <!-- <p><label>電話番号：<br><input type="tel" name="telNumber" placeholder="090-1234-5678"></label></p>
+                        <p><label>メールアドレス：<br><input type="email" name="mailAddress" placeholder="info@example.com"></label></p> -->
+                        
+                        <input class="floatleft" type="text" name="" id="input1" placeholder="タテ（mm）">
+                        <p class="floatleft"> × </p>
+                        <input class="floatleft" type="text" name="" id="input2" placeholder="ヨコ（mm）"><br>
+                    </div>
+                    <div class="clear"></div>
+                    <input class="button" type="button" name="" id="checkButton" value="次へ">
+                    <div class="attention" id="checkMessage"></div>
+                    <div class="attention" id="sizeMessage"></div>
+                    <div class="input-area2" id="input-area2" style="visibility: hidden">
+                        <h3 id="">厚みを下記より選んでください</h3>
+                        <input class="button flexbutton" type="button" name="" id="thick1" value="1cm以内" />
+                        <input class="button flexbutton" type="button" name="" id="thick2" value="3cm以内" />
+                        <input class="button flexbutton" type="button" name="" id="thick3" value=""/>
+                        <input class="button flexbutton" type="button" name="" id="thick4" value=""/>
+                    </div>
+                    <div class="input-area3">
+                        <!-- <h3 id="">重さを入力してください（任意項目）</p> -->
+                        <h3 id="">重さを入力してください</h3>
+                        <input type="text" name="" id="input3" aria-placeholder="重さ（g）" />
+                        <br>
+                    </div>
+                </div>
+                <div class="output-area">
+                    <h2>このお手紙は…</h2>
+                    <p class="output-fee" id="outputFee"></p>
+                    <p class="output-standard" id="outputStandard"></p>
+                    <p id="yu-pack" style="visibility: hidden;"><a href="https://www.post.japanpost.jp/cgi-simulator/youpack_choice.php">ゆうパックについてはこちら</a></p>
+                    <br>
+                    <br>
+                </div>
+            </div>
+            <div class="annotation">
+                <p>※料金・サイズは2023年6月現在の内容です</p>
+                <p>※機能は随時拡張していく予定です</p>
+            </div>
+        </div>
+        <footer>
+            <p>最終更新日：２０２３年６月２８日</p>
+        </footer>
+            
+        <script type="text/javascript" src="calc.js"></script>
+        </body>    
+        </html>

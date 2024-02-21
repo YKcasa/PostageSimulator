@@ -1,0 +1,162 @@
+/* リセット */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-decoration: none;
+    vertical-align: center;
+    font-family: "Meiryo UI", "MSゴシック", "sans-serif";
+    letter-spacing: 0.05em;
+}
+
+.clear {
+    clear: both;
+}
+
+header {
+    text-align: center;
+}
+
+.header-title {
+    width: 90%;
+    margin: 0 auto;
+    color: #025464;
+    font-weight: normal;
+    line-height: 60px;
+}
+
+.main-wrapper {
+    margin: 20px 0px;
+    text-align: center;
+}
+
+.main-wrapper h2 {
+    margin: 10px 0px;
+    color: #025464;
+}
+
+.main-wrapper h3 {
+    margin: 20px 0 20px 0;
+    color: #025464;
+    font-weight: normal;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #F8DA72;
+}
+
+.annotation {
+    margin: 20px 0px;
+}
+
+.annotation p {
+    color: #666666; 
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.input-area {
+    margin: 20px 0px;
+}
+
+.input-area p {
+    margin: 2px 0px;
+    color: #333333;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+.input-heading {
+    width: 200px;
+}
+
+.input-area1 {
+    display: inline-block;
+    text-align: center;
+    margin: 0 0 10px 0;
+}
+
+.floatleft {
+    float: left;
+}
+
+.input-area input {
+    width: 180px;
+    margin: 3px;
+    padding: 3px;
+    /* border: 1px solid #333333; */
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+/* .input-area span {
+    display: inline-block;
+    vertical-align: bottom;
+    margin: 4px;
+} */
+
+.attention {
+    color: #E57C23;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.button {
+    width: 120px;
+    margin: 0 auto;
+    /* border: 1px solid #333333; */
+    border-radius: 4px;
+    background-color: #025464;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.button:active {
+    /* border: 1px solid #A76f6f; */
+    background-color: #eeeeee;
+    color: #E57C23;
+}
+
+/* #input-area2 {
+    visibility: hidden;
+} */
+
+/* #checkbutton:checked ~ input-area2 {
+    visibility: visible;
+} */
+
+.input-area2 flexbutton {
+    display: flex;
+    width: 180px;
+}
+
+.input-area3 {
+    display: none;
+}
+
+.output-area {
+    margin: 40px 0px 20px 0px;
+}
+
+
+.output-fee, .output-standard {
+    margin: 20px 0;
+    color: #333333;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 600;
+}
+
+footer p {
+    width: 90%;
+    margin: 0 auto;
+    color: #666666; 
+    font-size: 14px;
+    text-align: center;
+    line-height: 24px;
+}
