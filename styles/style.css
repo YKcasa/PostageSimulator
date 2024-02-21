@@ -181,6 +181,18 @@ header h3 {
     display: flex;
 }
 
+
+/* オプション選択部分 */
+.option {
+    background-color: rgba(var(--main-font-dark-rgb),0.8);
+}
+
+.input-area input {
+    -webkit-appearance: checkbox;
+    margin-right: 5px;
+}
+
+
 /* シミュレーションエリア全体 */
 .simulation-area {
     width: 100%;

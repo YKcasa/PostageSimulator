@@ -1,6 +1,8 @@
 // --- 表示域との紐づけ
 // 封筒ボタンエリア
 const envelopeArea = document.getElementById('envelope-select');
+// オプションエリア
+const isExpress = document.getElementById('express-option');
 // シミュレーションエリア
 const displayPostage = document.getElementById('display-postage');
 const displayMailType = document.getElementById('display-mailtype');
@@ -136,6 +138,9 @@ class Inclusion {
         updateDisplay(displayWeightLimit, '');
         this.quantitySelect.classList.remove('select-emphasis');
         this.paperSizeSelect.classList.remove('select-emphasis');
+        isExpress.checked = false;
+        isExpress.disabled = true;
+
     }
 }
 
@@ -183,6 +188,7 @@ function scrollToButtons(){
 function calculatePostage(){
     loadEnvelopDatas();
     postalClassify();
+    isExpress.disabled = false;
 }
 
 // 封筒サイズ読み込み
@@ -209,7 +215,7 @@ function loadEnvelopDatas(){
 // 郵便種別判定 -> 郵便料金判定
 // --- !!! 料金変更の閾値はここにハードコーディングしているので郵便仕様変更時は修正する !!! ---
 function postalClassify() {
-    let mailType, diplayFee;
+    let mailType, basicFee, displayFee;
     
     if (totalWeight > 4000){ // 4kg超は取扱い不可。除外
         mailType = "４ｋｇを超えるものは、手紙ではなくゆうパック等をお使いください";
@@ -218,28 +224,30 @@ function postalClassify() {
     }else{
         if(totalWeight > 1000){ // 1kg超は定形外・規格外
             mailType = `定形外郵便物・規格外`;
-            displayFee = determinePostage(extraPostageArray, totalWeight);
+            basicFee = determinePostage(extraPostageArray, totalWeight);
         }else if(totalWeight > 50){ // 50g超は定形外
             if (evLongSide > 340 || evShortSide > 250 || totalThickness > 30){
                 mailType = `定形外郵便物・規格外`;
-                displayFee = determinePostage(extraPostageArray, totalWeight);
+                basicFee = determinePostage(extraPostageArray, totalWeight);
             }else{
                 mailType = `定形外郵便物・規格内`;
-                displayFee = determinePostage(nonstandardPostageArray, totalWeight);
+                basicFee = determinePostage(nonstandardPostageArray, totalWeight);
             }   
         }else{ //50g以内は大きさで３パターン
             if(evLongSide > 340 || evShortSide > 250 || totalThickness > 30){
                 mailType = `定形外郵便物・規格外`;
-                displayFee = determinePostage(extraPostageArray, totalWeight);
+                basicFee = determinePostage(extraPostageArray, totalWeight);
             }else if(evLongSide > 235 || evShortSide > 120 || totalThickness > 10){
                 mailType = `定形外郵便物・規格内`;
-                displayFee = determinePostage(nonstandardPostageArray, totalWeight);
+                basicFee = determinePostage(nonstandardPostageArray, totalWeight);
             }else{
                 mailType = `定形郵便物`;
-                displayFee = determinePostage(standardPostageArray, totalWeight);
+                basicFee = determinePostage(standardPostageArray, totalWeight);
             };
         };
     };
+    
+    [displayFee, mailType] = expressOrNot(basicFee, totalWeight, mailType);
 
     updateDisplay(displayMailType, mailType, 500);
     updateDisplay(displayWeightLimit, `あと ${(nextWeightLimit - totalWeight).toFixed(1)}ｇまで同一料金です`, 500);
@@ -254,6 +262,24 @@ function determinePostage(postalClassArray, weight) {
             nextWeightLimit = postalClassArray[i].weightLimit;
             return postalClassArray[i].fee;
         };
+    }
+}
+
+// 速達料金計算
+function determineExpressFee(weight){
+    for (i = 0; i < expressFeeArray.length; i++){
+        if (weight <= expressFeeArray[i].weightLimit){
+            return expressFeeArray[i].fee;
+        };
+    }
+}
+
+// 速達か否か
+function expressOrNot(basicFee, totalWeight, mailType){
+    if (isExpress.checked){
+        return [basicFee + determineExpressFee(totalWeight), `${mailType} 【速達】`];
+    }else{
+        return [basicFee, mailType];
     }
 }
 
@@ -272,6 +298,7 @@ function turnPostageCounter(){
 // --- 初期化処理　配列データより、インスタンスを作成する
 function initialize() {
     componentsInstances = inclusions.map(data => new Inclusion(data.id, data.label, data.weight, data.thickness, data.type, data.max, data.unitName));
+    isExpress.addEventListener('change', postalClassify);
 }
 
 

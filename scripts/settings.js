@@ -102,6 +102,13 @@ const extraPostageArray = [
   { weightLimit:4000, fee:1350 },
 ];  
 
+// --- 速達料金
+const expressFeeArray = [
+  { weightLimit:250, fee:260 },
+  { weightLimit:1000, fee:350 },
+  { weightLimit:4000, fee:600},
+];
+
 
 // // 点滅表示
 // function flashOff(targetElement){
