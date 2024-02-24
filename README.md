@@ -5,14 +5,14 @@
 プルダウンメニューより送付したい内容物の種類と数量を入力し、封入する封筒を選択することで、郵便料金の試算を行います。
 
 ### ファイルの説明
-top.html　：  
+top.html：  
 　メインのページです  
-styles/style.css　：  
+styles/style.css：  
 　スタイルシートです  
-scripts/main.js　：  
+scripts/main.js：  
 　アプリ本体部分のスクリプトです  
-　settings.jsの設定を読み込んで動的に要素を作成します 
-scripts/settings.js　：  
+　settings.jsの設定を読み込んで動的に要素を作成します   
+scripts/settings.js：  
 　内容物や封筒の設定情報です  
 　郵便料金の改訂時などはこのファイルを変更してください
 
