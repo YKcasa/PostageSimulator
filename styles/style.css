@@ -169,12 +169,19 @@ header h3 {
     transition: 0.5s;   
 }
 
-.envelope-btn:focus {
+/* 疑似クラスfocus不要かも？確認 */
+/* .envelope-btn:focus { 
     background-color: rgba(var(--main-font-dark-rgb),0.8);
     border: 2px solid rgba(var(--main-font-dark-rgb),0.3);
-
     color: var(--white);
     transition: 0.5s;
+} */
+
+.envelope-btn.active {
+    background-color: rgba(var(--main-font-dark-rgb),0.8);
+    border: 2px solid rgba(var(--main-font-dark-rgb),0.3);
+    color: var(--white);
+    transition: 0.2s;
 }
 
 .button-area {

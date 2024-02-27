@@ -16,7 +16,7 @@ let componentsInstances;
 let inclMaxLong, inclMaxShort, inclTotalThicknes, inclTotalWeight; // 内容物の最大長辺と短辺、内容物全体の厚さと重さ
 let evLongSide, evShortSide, totalThickness, totalWeight; // 封筒の長辺と短辺、封筒込みの厚さと重さ
 let nextWeightLimit;
-
+let envelopeButtons = []; // 封筒ボタンすべてを格納する配列
 
 // --- 内容物のクラス
 class Inclusion {
@@ -140,9 +140,15 @@ class Inclusion {
         this.paperSizeSelect.classList.remove('select-emphasis');
         isExpress.checked = false;
         isExpress.disabled = true;
-
     }
 }
+
+// 画面スクロール（封筒ボタンを見せるため。STEP１を画面最上部へ）
+function scrollToButtons(){
+    const scrollTarget = document.getElementById('inclusion');
+    scrollTarget.scrollIntoView({behavior: 'smooth', block: 'start'})
+}
+
 
 // --- 内容物の合算 --- 内容物の最大の長辺・短辺、内容物全体の厚さ・重さを計算
 function calculateInclusionTotal() {
@@ -158,6 +164,7 @@ function calculateInclusionTotal() {
     console.log(`長辺:${inclMaxLong}, 短辺:${inclMaxShort}, 厚さ:${inclTotalThicknes}, 重さ:${inclTotalWeight}`);  
 }    
 
+
 // --- 封筒ボタン生成 --- 内容物が入るサイズの封筒ボタンを表示し、イベントリスナーを設置
 function generateEnvelopeButtons() {
     envelopeArea.innerHTML = ''; 
@@ -171,24 +178,29 @@ function generateEnvelopeButtons() {
             button.textContent = `${data.value}`;
             button.classList.add('envelope-btn');
             envelopeArea.appendChild(button);
+
+            button.addEventListener('click', () => {
+                toggleButtonState(envelopeId);
+                loadEnvelopDatas();
+                postalClassify();
+                isExpress.disabled = false;
+            });
         }
     });
     
-    const envelopeButtons = document.querySelectorAll('.envelope-btn');
-    envelopeButtons.forEach(btns => btns.addEventListener('click', calculatePostage));
+    envelopeButtons = document.querySelectorAll('.envelope-btn');
+
 }
 
-// --- 画面スクロール（封筒ボタンを見せるため。STEP１を画面最上部へ）
-function scrollToButtons(){
-    const scrollTarget = document.getElementById('inclusion');
-    scrollTarget.scrollIntoView({behavior: 'smooth', block: 'start'})
-}
-
-// --- 封筒ボタン選択時　-> 封筒サイズ読み込み、郵便種別判定
-function calculatePostage(){
-    loadEnvelopDatas();
-    postalClassify();
-    isExpress.disabled = false;
+// ボタンの状態管理
+function toggleButtonState(buttonID) {
+    envelopeButtons.forEach(btn => {
+        if (btn.id === buttonID){
+            btn.classList.add('active');
+        }else{
+            btn.classList.remove('active');
+        }
+    });
 }
 
 // 封筒サイズ読み込み
@@ -289,6 +301,7 @@ function updateDisplay(area, contents, delay = 0){
     area.animate([{opacity: '0'},{opacity: '1'}], delay);
     area.textContent = `${contents}`;
 }
+
 
 // --- 郵便料金の値が変更するとき、カウントアップ・カウントダウン表示する（作成中）
 function turnPostageCounter(){
