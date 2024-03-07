@@ -38,8 +38,9 @@ header {
 
 header h3 {
     font-weight: 600;
-    line-height: 20px;
+    line-height: 36px;
     font-size: 24px;
+    text-align: center;
     letter-spacing: 0.1em;
     color: var(--main-font-light);
 }
